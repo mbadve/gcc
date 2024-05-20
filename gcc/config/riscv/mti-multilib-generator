@@ -84,9 +84,9 @@ for cfg in sys.argv[1:]:
   for alt in alts[1:]:
     arches[alt] = 1
     reuse.append('mlittle-endian/march.%s/mabi.%s=mlittle-endian/march.%s/mabi.%s' % (arch, abi, alt, abi))
-    reuse.append('mbig-endian/march.%s/mabi.%s=mbig-endian/march.%s/mabi.%s' % (arch, abi, alt, abi))
+    #reuse.append('mbig-endian/march.%s/mabi.%s=mbig-endian/march.%s/mabi.%s' % (arch, abi, alt, abi))
   required.append('mlittle-endian/march=%s/mabi=%s' % (arch, abi))
-  required.append('mbig-endian/march=%s/mabi=%s' % (arch, abi))
+  #required.append('mbig-endian/march=%s/mabi=%s' % (arch, abi))
 
 arch_options = '/'.join(['march=%s' % x for x in arches.keys()])
 arch_dirnames = ' \\\n'.join(arches.keys())
