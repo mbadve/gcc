@@ -1644,6 +1644,7 @@ OBJS = \
 	prime-paths.o \
 	path-coverage.o \
 	plugin.o \
+	pointer-chasing.o \
 	pointer-query.o \
 	postreload-gcse.o \
 	postreload.o \
