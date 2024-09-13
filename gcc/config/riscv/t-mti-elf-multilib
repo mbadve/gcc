@@ -33,32 +33,62 @@ rv64gzba_zbb \
 rv64gb lp64 \
 lp64d
 MULTILIB_REQUIRED = mlittle-endian/march=rv64imac/mabi=lp64 \
+mbig-endian/march=rv64imac/mabi=lp64 \
 mlittle-endian/march=rv64imafdc/mabi=lp64d \
+mbig-endian/march=rv64imafdc/mabi=lp64d \
 mlittle-endian/march=rv64ima/mabi=lp64 \
+mbig-endian/march=rv64ima/mabi=lp64 \
 mlittle-endian/march=rv64imafd/mabi=lp64d \
+mbig-endian/march=rv64imafd/mabi=lp64d \
 mlittle-endian/march=rv64imaczba_zbb/mabi=lp64 \
+mbig-endian/march=rv64imaczba_zbb/mabi=lp64 \
 mlittle-endian/march=rv64imafdczba_zbb/mabi=lp64d \
+mbig-endian/march=rv64imafdczba_zbb/mabi=lp64d \
 mlittle-endian/march=rv64imazba_zbb/mabi=lp64 \
-mlittle-endian/march=rv64imafdzba_zbb/mabi=lp64d
+mbig-endian/march=rv64imazba_zbb/mabi=lp64 \
+mlittle-endian/march=rv64imafdzba_zbb/mabi=lp64d \
+mbig-endian/march=rv64imafdzba_zbb/mabi=lp64d
 MULTILIB_REUSE = mlittle-endian/march.rv64imac/mabi.lp64=mlittle-endian/march.rv64imaczba/mabi.lp64 \
+mbig-endian/march.rv64imac/mabi.lp64=mbig-endian/march.rv64imaczba/mabi.lp64 \
 mlittle-endian/march.rv64imac/mabi.lp64=mlittle-endian/march.rv64imaczbb/mabi.lp64 \
+mbig-endian/march.rv64imac/mabi.lp64=mbig-endian/march.rv64imaczbb/mabi.lp64 \
 mlittle-endian/march.rv64imafdc/mabi.lp64d=mlittle-endian/march.rv64imafdczba/mabi.lp64d \
+mbig-endian/march.rv64imafdc/mabi.lp64d=mbig-endian/march.rv64imafdczba/mabi.lp64d \
 mlittle-endian/march.rv64imafdc/mabi.lp64d=mlittle-endian/march.rv64imafdczbb/mabi.lp64d \
+mbig-endian/march.rv64imafdc/mabi.lp64d=mbig-endian/march.rv64imafdczbb/mabi.lp64d \
 mlittle-endian/march.rv64imafdc/mabi.lp64d=mlittle-endian/march.rv64gc/mabi.lp64d \
+mbig-endian/march.rv64imafdc/mabi.lp64d=mbig-endian/march.rv64gc/mabi.lp64d \
 mlittle-endian/march.rv64imafdc/mabi.lp64d=mlittle-endian/march.rv64gczba/mabi.lp64d \
+mbig-endian/march.rv64imafdc/mabi.lp64d=mbig-endian/march.rv64gczba/mabi.lp64d \
 mlittle-endian/march.rv64imafdc/mabi.lp64d=mlittle-endian/march.rv64gczbb/mabi.lp64d \
+mbig-endian/march.rv64imafdc/mabi.lp64d=mbig-endian/march.rv64gczbb/mabi.lp64d \
 mlittle-endian/march.rv64ima/mabi.lp64=mlittle-endian/march.rv64imazba/mabi.lp64 \
+mbig-endian/march.rv64ima/mabi.lp64=mbig-endian/march.rv64imazba/mabi.lp64 \
 mlittle-endian/march.rv64ima/mabi.lp64=mlittle-endian/march.rv64imazbb/mabi.lp64 \
+mbig-endian/march.rv64ima/mabi.lp64=mbig-endian/march.rv64imazbb/mabi.lp64 \
 mlittle-endian/march.rv64imafd/mabi.lp64d=mlittle-endian/march.rv64imafdzba/mabi.lp64d \
+mbig-endian/march.rv64imafd/mabi.lp64d=mbig-endian/march.rv64imafdzba/mabi.lp64d \
 mlittle-endian/march.rv64imafd/mabi.lp64d=mlittle-endian/march.rv64imafdzbb/mabi.lp64d \
+mbig-endian/march.rv64imafd/mabi.lp64d=mbig-endian/march.rv64imafdzbb/mabi.lp64d \
 mlittle-endian/march.rv64imafd/mabi.lp64d=mlittle-endian/march.rv64g/mabi.lp64d \
+mbig-endian/march.rv64imafd/mabi.lp64d=mbig-endian/march.rv64g/mabi.lp64d \
 mlittle-endian/march.rv64imafd/mabi.lp64d=mlittle-endian/march.rv64gzba/mabi.lp64d \
+mbig-endian/march.rv64imafd/mabi.lp64d=mbig-endian/march.rv64gzba/mabi.lp64d \
 mlittle-endian/march.rv64imafd/mabi.lp64d=mlittle-endian/march.rv64gzbb/mabi.lp64d \
+mbig-endian/march.rv64imafd/mabi.lp64d=mbig-endian/march.rv64gzbb/mabi.lp64d \
 mlittle-endian/march.rv64imaczba_zbb/mabi.lp64=mlittle-endian/march.rv64imacb/mabi.lp64 \
+mbig-endian/march.rv64imaczba_zbb/mabi.lp64=mbig-endian/march.rv64imacb/mabi.lp64 \
 mlittle-endian/march.rv64imafdczba_zbb/mabi.lp64d=mlittle-endian/march.rv64imafdcb/mabi.lp64d \
+mbig-endian/march.rv64imafdczba_zbb/mabi.lp64d=mbig-endian/march.rv64imafdcb/mabi.lp64d \
 mlittle-endian/march.rv64imafdczba_zbb/mabi.lp64d=mlittle-endian/march.rv64gczba_zbb/mabi.lp64d \
+mbig-endian/march.rv64imafdczba_zbb/mabi.lp64d=mbig-endian/march.rv64gczba_zbb/mabi.lp64d \
 mlittle-endian/march.rv64imafdczba_zbb/mabi.lp64d=mlittle-endian/march.rv64gcb/mabi.lp64d \
+mbig-endian/march.rv64imafdczba_zbb/mabi.lp64d=mbig-endian/march.rv64gcb/mabi.lp64d \
 mlittle-endian/march.rv64imazba_zbb/mabi.lp64=mlittle-endian/march.rv64imab/mabi.lp64 \
+mbig-endian/march.rv64imazba_zbb/mabi.lp64=mbig-endian/march.rv64imab/mabi.lp64 \
 mlittle-endian/march.rv64imafdzba_zbb/mabi.lp64d=mlittle-endian/march.rv64imafdb/mabi.lp64d \
+mbig-endian/march.rv64imafdzba_zbb/mabi.lp64d=mbig-endian/march.rv64imafdb/mabi.lp64d \
 mlittle-endian/march.rv64imafdzba_zbb/mabi.lp64d=mlittle-endian/march.rv64gzba_zbb/mabi.lp64d \
-mlittle-endian/march.rv64imafdzba_zbb/mabi.lp64d=mlittle-endian/march.rv64gb/mabi.lp64d
+mbig-endian/march.rv64imafdzba_zbb/mabi.lp64d=mbig-endian/march.rv64gzba_zbb/mabi.lp64d \
+mlittle-endian/march.rv64imafdzba_zbb/mabi.lp64d=mlittle-endian/march.rv64gb/mabi.lp64d \
+mbig-endian/march.rv64imafdzba_zbb/mabi.lp64d=mbig-endian/march.rv64gb/mabi.lp64d
