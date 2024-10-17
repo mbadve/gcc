@@ -847,4 +847,9 @@ enum
 extern bool riscv_load_store_bonding_p (rtx *, machine_mode, bool);
 extern const char *riscv_output_join2_insns (rtx *, machine_mode, bool, bool);
 
+extern bool riscv_fix_operands_ld_sd (rtx *operands, bool load,
+				      bool const_store, bool commute);
+extern bool riscv_valid_operands_ld_sd (rtx *operands);
+extern const char *riscv_output_move_double (rtx *operands);
+
 #endif /* ! GCC_RISCV_PROTOS_H */

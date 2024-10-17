@@ -338,6 +338,8 @@ static const struct riscv_ext_version riscv_ext_version_table[] =
   {"zicntr", ISA_SPEC_CLASS_NONE, 2, 0},
   {"zihpm",  ISA_SPEC_CLASS_NONE, 2, 0},
 
+  {"zilsd",  ISA_SPEC_CLASS_NONE, 1, 0},
+
   {"zk",    ISA_SPEC_CLASS_NONE, 1, 0},
   {"zkn",   ISA_SPEC_CLASS_NONE, 1, 0},
   {"zks",   ISA_SPEC_CLASS_NONE, 1, 0},
@@ -1663,6 +1665,8 @@ static const riscv_ext_flag_table_t riscv_ext_flag_table[] =
 
   RISCV_EXT_FLAG_ENTRY ("zimop", x_riscv_mop_subext, MASK_ZIMOP),
   RISCV_EXT_FLAG_ENTRY ("zcmop", x_riscv_mop_subext, MASK_ZCMOP),
+
+  RISCV_EXT_FLAG_ENTRY ("zilsd", x_riscv_zi_subext, MASK_ZILSD),
 
   RISCV_EXT_FLAG_ENTRY ("zve32x", x_target_flags, MASK_VECTOR),
   RISCV_EXT_FLAG_ENTRY ("zve32f", x_target_flags, MASK_VECTOR),
