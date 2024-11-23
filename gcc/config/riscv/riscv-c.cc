@@ -272,6 +272,8 @@ riscv_cpu_cpp_builtins (cpp_reader *pfile)
   else if (riscv_microarchitecture == mips_i8500
 	   || riscv_microarchitecture == mips_daimyo)
     builtin_define ("_RISCV_TUNE_I8500");
+  else if (riscv_microarchitecture == mips_m8500)
+    builtin_define ("_RISCV_TUNE_M8500");
 }
 
 /* Implement "#pragma riscv intrinsic".  */

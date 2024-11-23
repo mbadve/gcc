@@ -698,6 +698,28 @@ static const struct riscv_tune_param mips_daimyo_tune_info = {
   NULL,         /* loop_align */
 };
 
+/* Costs to use when optimizing for MIPS m8500.  */
+static const struct riscv_tune_param mips_m8500_tune_info = {
+  {COSTS_N_INSNS (4), COSTS_N_INSNS (8)},	/* fp_add */
+  {COSTS_N_INSNS (4), COSTS_N_INSNS (8)},	/* fp_mul */
+  {COSTS_N_INSNS (10), COSTS_N_INSNS (20)},	/* fp_div */
+  {COSTS_N_INSNS (5), COSTS_N_INSNS (5)},	/* int_mul */
+  {COSTS_N_INSNS (14), COSTS_N_INSNS (14)},	/* int_div */
+  2,						/* issue_rate */
+  8,						/* branch_cost */
+  4,						/* memory_cost */
+  8,						/* fmv_cost */
+  true,					/* slow_unaligned_access */
+  false,        /* vector_unaligned_access */
+  false,				/* use_divmod_expansion */
+  false,        /* overlap_op_by_pieces */
+  RISCV_FUSE_NOTHING,                           /* fusible_ops */
+  NULL,					/* vector cost */
+  NULL,         /* function_align */
+  NULL,         /* jump_align */
+  NULL,         /* loop_align */
+};
+
 static bool riscv_avoid_shrink_wrapping_separate ();
 static tree riscv_handle_fndecl_attribute (tree *, tree, tree, int, bool *);
 static tree riscv_handle_type_attribute (tree *, tree, tree, int, bool *);

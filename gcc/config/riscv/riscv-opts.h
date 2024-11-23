@@ -62,6 +62,7 @@ enum riscv_microarchitecture_type {
   mips_p8700,
   mips_daimyo,
   mips_i8500,
+  mips_m8500,
 };
 extern enum riscv_microarchitecture_type riscv_microarchitecture;
 
