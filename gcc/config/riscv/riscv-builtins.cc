@@ -130,6 +130,7 @@ AVAIL (zbb64, TARGET_ZBB && TARGET_64BIT)
 AVAIL (zbb64_or_zbkb64, (TARGET_ZBKB || TARGET_ZBB) && TARGET_64BIT)
 AVAIL (zbb_or_zbkb, (TARGET_ZBKB || TARGET_ZBB))
 AVAIL (hint_pause, (!0))
+AVAIL (trig, TARGET_XMIPSTRIG)
 
 // CORE-V AVAIL
 AVAIL (cvmac, TARGET_XCVMAC && !TARGET_64BIT)
@@ -191,6 +192,7 @@ AVAIL (cvsimd, TARGET_XCVSIMD && !TARGET_64BIT)
 #define RISCV_ATYPE_QI intQI_type_node
 #define RISCV_ATYPE_HI intHI_type_node
 #define RISCV_ATYPE_SI intSI_type_node
+#define RISCV_ATYPE_SF float_type_node
 #define RISCV_ATYPE_VOID_PTR ptr_type_node
 #define RISCV_ATYPE_INT_PTR integer_ptr_type_node
 
@@ -216,6 +218,21 @@ static const struct riscv_builtin_description riscv_builtins[] = {
   DIRECT_BUILTIN (frflags, RISCV_USI_FTYPE, hard_float),
   DIRECT_NO_TARGET_BUILTIN (fsflags, RISCV_VOID_FTYPE_USI, hard_float),
   RISCV_BUILTIN (pause, "pause", RISCV_BUILTIN_DIRECT_NO_TARGET, RISCV_VOID_FTYPE, hint_pause),
+  RISCV_BUILTIN (mips_fsinhz, "mips_fsinhz", RISCV_BUILTIN_DIRECT, RISCV_SF_FTYPE_SF, trig),
+  RISCV_BUILTIN (mips_fcoshz, "mips_fcoshz", RISCV_BUILTIN_DIRECT, RISCV_SF_FTYPE_SF, trig),
+  RISCV_BUILTIN (mips_ftanhz, "mips_ftanhz", RISCV_BUILTIN_DIRECT, RISCV_SF_FTYPE_SF, trig),
+  RISCV_BUILTIN (mips_fatanhz, "mips_fatanhz", RISCV_BUILTIN_DIRECT, RISCV_SF_FTYPE_SF, trig),
+  RISCV_BUILTIN (mips_ffexp2, "mips_ffexp2", RISCV_BUILTIN_DIRECT, RISCV_SF_FTYPE_SF, trig),
+  RISCV_BUILTIN (mips_fversinhz, "mips_fversinhz", RISCV_BUILTIN_DIRECT, RISCV_SF_FTYPE_SF, trig),
+  RISCV_BUILTIN (mips_ffrecip, "mips_ffrecip", RISCV_BUILTIN_DIRECT, RISCV_SF_FTYPE_SF, trig),
+  RISCV_BUILTIN (mips_ffsqrt, "mips_ffsqrt", RISCV_BUILTIN_DIRECT, RISCV_SF_FTYPE_SF, trig),
+  RISCV_BUILTIN (mips_ffrsqrt, "mips_ffrsqrt", RISCV_BUILTIN_DIRECT, RISCV_SF_FTYPE_SF, trig),
+  RISCV_BUILTIN (mips_exp10f, "mips_exp10f", RISCV_BUILTIN_DIRECT, RISCV_SF_FTYPE_SF, trig),
+  RISCV_BUILTIN (mips_asinf_hz, "mips_asinf_hz", RISCV_BUILTIN_DIRECT, RISCV_SF_FTYPE_SF, trig),
+  RISCV_BUILTIN (mips_acosf_hz, "mips_acosf_hz", RISCV_BUILTIN_DIRECT, RISCV_SF_FTYPE_SF, trig),
+  RISCV_BUILTIN (mips_atan2f_hz, "mips_atan2f_hz", RISCV_BUILTIN_DIRECT, RISCV_SF_FTYPE_SF_SF, trig),
+  RISCV_BUILTIN (mips_tanf_hz_fc, "mips_tanf_hz_fc", RISCV_BUILTIN_DIRECT, RISCV_SF_FTYPE_SF, trig),
+  RISCV_BUILTIN (mips_atanf_hz_fc, "mips_atanf_hz_fc", RISCV_BUILTIN_DIRECT, RISCV_SF_FTYPE_SF, trig),
 };
 
 /* Index I is the function declaration for riscv_builtins[I], or null if the

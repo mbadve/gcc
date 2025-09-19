@@ -27,8 +27,7 @@
 ;; TRIG pipe   - Trig
 ;; LSU pipe    - LSU pipe
 
-(define_automaton "mips_m8500_alu_pipe, mips_m8500_mdu_pipe, mips_m8500_fpu_pipe")
-;; , mips_m8500_trig_pipe")
+(define_automaton "mips_m8500_alu_pipe, mips_m8500_mdu_pipe, mips_m8500_fpu_pipe, mips_m8500_trig_pipe")
 
 (define_cpu_unit "mips_m8500_alu0, mips_m8500_alu1, mips_m8500_lsu"
 		 "mips_m8500_alu_pipe")
@@ -37,7 +36,7 @@
 
 (define_cpu_unit "mips_m8500_fpu_short, mips_m8500_fpu_long" "mips_m8500_fpu_pipe")
 
-;; (define_cpu_unit "mips_m8500_trig" "mips_m8500_trig_pipe")
+(define_cpu_unit "mips_m8500_trig" "mips_m8500_trig_pipe")
 
 ;;
 ;; FPU pipe
@@ -141,3 +140,12 @@
   (and (eq_attr "tune" "mips_m8500")
        (eq_attr "type" "call,jalr"))
   "mips_m8500_alu0")
+
+;;
+;; TRIG
+;; TODO: untill we get final latency numbers for trig instructions from the hw spec, we assume it as 10 cycles
+;;
+(define_insn_reservation "mips_m8500_trig" 10
+  (and (eq_attr "tune" "mips_m8500")
+       (eq_attr "type" "fsin, fcos, ftan, fversin, ffrecip, ffrecipsqrt, fatan, ftanh, flog, fexp, ffsqrt"))
+  "mips_m8500_trig")

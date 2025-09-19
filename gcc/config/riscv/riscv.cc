@@ -1800,6 +1800,18 @@ const char *fli_value_print[32] =
   "8.0", "16.0", "128.0", "256.0", "32768.0", "65536.0", "inf", "nan"
 };
 
+/* load given constant in string format into a register */
+rtx
+riscv_get_trig_const(int index) {
+  REAL_VALUE_TYPE scale;
+  rtx tmpreg = gen_reg_rtx (SFmode);
+  rtx scalereg = gen_reg_rtx (SFmode);
+  scale = REAL_VALUE_ATOF(fli_value_print[index], SFmode);
+  scalereg = const_double_from_real_value(scale, SFmode);
+  emit_move_insn (tmpreg, scalereg);
+  return tmpreg;
+}
+
 /* Return index of the FLI instruction table if rtx X is an immediate constant that can
    be moved using a single FLI instruction in zfa extension. Return -1 if not found.  */
 
@@ -8768,6 +8780,52 @@ riscv_load_store_bond_insns ()
   riscv_load_store_bond_insns_in_range (get_insns (), get_last_insn ());
 }
 
+rtx
+riscv_get_trig_scale_value(int index) {
+  rtx scalereg = gen_reg_rtx (SFmode);
+  emit_insn (gen_riscv_mips_flti (scalereg, gen_int_mode (index, SImode)));
+  return scalereg;
+}
+
+rtx riscv_output_asinf_hz(rtx dest, rtx src) {
+    // temp_reg1 = 1.0
+    rtx const_1 = riscv_get_trig_const(FLI_CONST_1_0_INDEX);
+    rtx temp_reg1 = gen_reg_rtx (SFmode);
+    emit_move_insn(temp_reg1, const_1);
+
+    // temp_reg2 = x * x
+    rtx temp_reg2 = gen_reg_rtx (SFmode);
+    emit_insn (gen_mulsf3(temp_reg2, src, src));
+
+    // temp_reg3 = 1/x
+    rtx temp_reg3 = gen_reg_rtx (SFmode);
+    emit_insn (gen_riscv_mips_ffrecip (temp_reg3, src));
+
+    // temp_reg2 = temp_reg1 - temp_reg2  (1 - x2)
+    emit_insn (gen_subsf3(temp_reg2, temp_reg1, temp_reg2));
+
+    // temp_reg1 = sqrt(1-x2)
+    emit_insn (gen_riscv_mips_ffsqrt (temp_reg1, temp_reg2));
+
+    // temp_reg2 = 1/sqrt(1-x2)
+    emit_insn (gen_riscv_mips_ffrsqrt (temp_reg2, temp_reg2));
+
+    emit_insn (gen_mulsf3(temp_reg1, temp_reg3, temp_reg1));
+    emit_insn (gen_mulsf3(temp_reg2, src, temp_reg2));
+    emit_insn (gen_riscv_mips_fatanhz (temp_reg1, temp_reg1));
+
+    // temp_reg3 = 0.25
+    rtx const_0_25 = riscv_get_trig_const(FLI_CONST_0_25_INDEX);
+    emit_move_insn(temp_reg3, const_0_25);
+
+    emit_insn (gen_copysignsf3(temp_reg3, temp_reg3, src));
+    emit_insn (gen_riscv_mips_fatanhz (temp_reg2, temp_reg2));
+
+    emit_insn (gen_subsf3(dest, temp_reg3, temp_reg1));
+    emit_insn (gen_fmaxsf3(dest, temp_reg2, dest));
+    return dest;
+}
+
 /*zcmp multi push and pop code_for_push_pop function ptr array  */
 static const code_for_push_pop_t code_for_push_pop[ZCMP_MAX_GRP_SLOTS][ZCMP_OP_NUM]
   = {{code_for_gpr_multi_push_up_to_ra, code_for_gpr_multi_pop_up_to_ra,
@@ -11507,6 +11565,10 @@ riscv_option_override (void)
   /* If users don't set prefer-lrsc, we will enable for p8700. **/
   if (!OPTION_SET_P (TARGET_PREFER_LRSC) && riscv_microarchitecture == mips_p8700) {
     TARGET_PREFER_LRSC = 1;
+  }
+
+  if (TARGET_XMIPSTRIG && riscv_microarchitecture != mips_m8500) {
+    error ("extension 'xmipstrig' is only supported for riscv cpu m8500");
   }
 
   /* Save these options as the default ones in case we push and pop them later

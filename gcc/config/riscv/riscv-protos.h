@@ -851,5 +851,8 @@ extern bool riscv_fix_operands_ld_sd (rtx *operands, bool load,
 				      bool const_store, bool commute);
 extern bool riscv_valid_operands_ld_sd (rtx *operands);
 extern const char *riscv_output_move_double (rtx *operands);
+extern rtx riscv_get_trig_scale_value(int flti_const_index);
+extern rtx riscv_get_trig_const(int index);
+extern rtx riscv_output_asinf_hz(rtx dest, rtx src);
 
 #endif /* ! GCC_RISCV_PROTOS_H */

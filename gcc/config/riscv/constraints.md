@@ -319,3 +319,8 @@
 (define_address_constraint "ZD"
   "An address operand that is valid for a mips prefetch instruction"
   (match_test "riscv_prefetch_offset_address_p (op, mode)"))
+
+(define_constraint "zlti"
+  "Integer constant for MIPS FLTI instruction."
+  (and (match_code "const_int")
+       (match_test "TARGET_XMIPSTRIG && IN_RANGE (ival, 0, 15)")))

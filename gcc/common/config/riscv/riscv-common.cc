@@ -422,6 +422,8 @@ static const struct riscv_ext_version riscv_ext_version_table[] =
   {"xcvsimd", ISA_SPEC_CLASS_NONE, 1, 0},
   {"xcvbi", ISA_SPEC_CLASS_NONE, 1, 0},
 
+  {"xmipstrig", ISA_SPEC_CLASS_NONE, 1, 0},
+
   {"xtheadba", ISA_SPEC_CLASS_NONE, 1, 0},
   {"xtheadbb", ISA_SPEC_CLASS_NONE, 1, 0},
   {"xtheadbs", ISA_SPEC_CLASS_NONE, 1, 0},
@@ -1783,6 +1785,7 @@ static const riscv_ext_flag_table_t riscv_ext_flag_table[] =
   RISCV_EXT_FLAG_ENTRY ("xmipscmov", x_riscv_xmips_subext, MASK_XMIPSCMOV),
   RISCV_EXT_FLAG_ENTRY ("xmipscbop", x_riscv_xmips_subext, MASK_XMIPSCBOP),
   RISCV_EXT_FLAG_ENTRY ("xmipslsp", x_riscv_xmips_subext, MASK_XMIPSLSP),
+  RISCV_EXT_FLAG_ENTRY ("xmipstrig", x_riscv_xmips_subext, MASK_XMIPSTRIG),
 
   RISCV_EXT_FLAG_ENTRY ("xsfvcp",   x_riscv_sifive_subext, MASK_XSFVCP),
   RISCV_EXT_FLAG_ENTRY ("xsfcease", x_riscv_sifive_subext, MASK_XSFCEASE),

@@ -276,6 +276,15 @@
   return false;
 })
 
+(define_predicate "flti_operand"
+  (match_code "const_int")
+{
+  int val = INTVAL (op);
+  if (val >= 0 && val <= 15)
+    return true;
+  return false;
+ })
+
 (define_predicate "move_operand"
   (match_operand 0 "general_operand")
 {

@@ -103,6 +103,30 @@
   ;; Stack Smash Protector
   UNSPEC_SSP_SET
   UNSPEC_SSP_TEST
+
+  ;; sine/cosine
+  UNSPEC_SIN
+  UNSPEC_COS
+  UNSPEC_TAN
+  UNSPEC_VERSIN
+  UNSPEC_FRECIP
+  UNSPEC_FRECIPSQRT
+  UNSPEC_ATAN
+  UNSPEC_TANH
+  UNSPEC_LOG2F
+  UNSPEC_LOGF
+  UNSPEC_LOG10F
+  UNSPEC_EXPF
+  UNSPEC_EXP10F
+  UNSPEC_FFSQRT
+  UNSPEC_HYPOTF
+  UNSPEC_ATAN2F
+  UNSPEC_ACOS
+  UNSPEC_ASIN
+  UNSPEC_ATAN2F_HZ
+  UNSPEC_TANF_HZ_FC
+  UNSPEC_ATANF_HZ_FC
+  UNSPEC_FLTI
 ])
 
 (define_c_enum "unspecv" [
@@ -518,7 +542,8 @@
    vslideup,vslidedown,vislide1up,vislide1down,vfslide1up,vfslide1down,
    vgather,vcompress,vmov,vector,vandn,vbrev,vbrev8,vrev8,vclz,vctz,vcpop,vrol,vror,vwsll,
    vclmul,vclmulh,vghsh,vgmul,vaesef,vaesem,vaesdf,vaesdm,vaeskf1,vaeskf2,vaesz,
-   vsha2ms,vsha2ch,vsha2cl,vsm4k,vsm4r,vsm3me,vsm3c,vfncvtbf16,vfwcvtbf16,vfwmaccbf16"
+   vsha2ms,vsha2ch,vsha2cl,vsm4k,vsm4r,vsm3me,vsm3c,vfncvtbf16,vfwcvtbf16,vfwmaccbf16,
+   fsin, fcos, ftan, fversin, ffrecip, ffrecipsqrt, fatan, ftanh, flog, fexp, ffsqrt"
   (cond [(eq_attr "got" "load") (const_string "load")
 
 	 ;; If a doubleword move uses these expensive instructions,
