@@ -45,6 +45,8 @@ RISCV_TUNE("xiangshan-nanhu", xiangshan, xiangshan_nanhu_tune_info)
 RISCV_TUNE("generic-ooo", generic_ooo, generic_ooo_tune_info)
 RISCV_TUNE("size", generic, optimize_size_tune_info)
 RISCV_TUNE("mips-p8700", mips_p8700, mips_p8700_tune_info)
+RISCV_TUNE("mips-daimyo", mips_daimyo, mips_daimyo_tune_info)
+RISCV_TUNE("mips-i8500", mips_i8500, mips_daimyo_tune_info)
 
 #undef RISCV_TUNE
 
@@ -108,4 +110,7 @@ RISCV_CORE("xiangshan-nanhu",      "rv64imafdc_zba_zbb_zbc_zbs_"
 
 RISCV_CORE("mips-p8700",      "rv64imfd_zicsr_zifencei_zalrsc_zba_zbb",
 			      "mips-p8700")
+
+RISCV_CORE("mips-i8500",      "rv64imafdb",
+			      "mips-i8500")
 #undef RISCV_CORE
