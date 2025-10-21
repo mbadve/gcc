@@ -128,13 +128,12 @@ float test_builtin15(float x) {
 **	fmul.s	fa3,fa4,fa3
 **	fmul.s	fa5,fa0,fa5
 **	mips.fatanhz.s fa3,fa3
-**	fli.s	fa4,0.25
-**	fsgnj.s	fa4,fa4,fa0
+**	fli.s	fa2,0.25
+**	fsgnj.s	fa4,fa2,fa0
 **	mips.fatanhz.s fa5,fa5
 **	fsub.s	fa4,fa4,fa3
 **	fmax.s	fa4,fa5,fa4
-**	fli.s	fa0,0.5
-**	fsub.s	fa0,fa0,fa4
+**	fsub.s	fa0,fa2,fa4
 **	ret
 */
 float test_builtin17(float x) {

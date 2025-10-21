@@ -87,7 +87,7 @@ float test_logf(float x) {
 /*
 **test_log10:
 ** mips.fflog2.s fa0,fa0
-** mips.flti.s fa5,8
+** mips.flti.s fa5,9
 ** fmul.s	fa0,fa0,fa5
 ** ret
 */
@@ -98,7 +98,7 @@ float test_log10(float x) {
 
 /*
 **test_expf:
-**	mips.flti.s fa5,6
+**	mips.flti.s fa5,7
 **	fmul.s	fa5,fa0,fa5
 **	mips.ffexp2.s fa0,fa5
 **	ret
@@ -147,24 +147,23 @@ float test_asinf(float x) {
 
 /*
 **test_acosf:
-**	fmul.s	fa4,fa0,fa0
-**	mips.ffrecip.s fa5,fa0
+**	fmul.s	fa5,fa0,fa0
+**	mips.ffrecip.s fa4,fa0
 **	fli.s	fa3,1.0
-**	fsub.s	fa4,fa3,fa4
-**	mips.ffsqrt.s fa3,fa4
-**	mips.ffrsqrt.s fa4,fa4
-**	fmul.s	fa3,fa5,fa3
-**	fmul.s	fa4,fa0,fa4
+**	fsub.s	fa5,fa3,fa5
+**	mips.ffsqrt.s fa3,fa5
+**	mips.ffrsqrt.s fa5,fa5
+**	fmul.s	fa3,fa4,fa3
+**	fmul.s	fa5,fa0,fa5
 **	mips.fatanhz.s fa3,fa3
-**	fli.s	fa5,0.25
-**	fsgnj.s	fa5,fa5,fa0
-**	mips.fatanhz.s fa4,fa4
-**	fsub.s	fa5,fa5,fa3
-**	fmax.s	fa5,fa4,fa5
-**	fli.s	fa4,0.5
-**	fsub.s	fa5,fa4,fa5
+**	fli.s	fa2,0.25
+**	fsgnj.s	fa4,fa2,fa0
+**	mips.fatanhz.s fa5,fa5
+**	fsub.s	fa4,fa4,fa3
+**	fmax.s	fa4,fa5,fa4
+**	fsub.s	fa4,fa2,fa4
 **	mips.flti.s fa0,3
-**	fmul.s	fa0,fa5,fa0
+**	fmul.s	fa0,fa4,fa0
 **	ret
 */
 extern float acosf(float x);
