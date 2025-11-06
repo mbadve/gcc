@@ -1318,8 +1318,10 @@ extern void riscv_remove_unneeded_save_restore_calls (void);
                        || riscv_microarchitecture == mips_p8700 \
                        || riscv_microarchitecture == mips_m8500)
 
+/* Enable load store bonding for daimyo.  */
 #define ENABLE_LD_ST_PAIRS \
-  (TARGET_XMIPSLSP || TARGET_LOAD_STORE_BONDING)
+  ((TARGET_XMIPSLSP || TARGET_LOAD_STORE_BONDING) && \
+   TARGET_DAIMYO)
 
 /* Scaling factor/constant for MIPS trig instructions */
 enum flti_index {
