@@ -4414,7 +4414,8 @@
   if (TARGET_XMIPSCBOP)
     {
       /* Mips Prefetch write is nop for p8700.  */
-      if (operands[1] != CONST0_RTX (GET_MODE (operands[1])))
+      if (riscv_microarchitecture == mips_p8700
+        && operands[1] != CONST0_RTX (GET_MODE (operands[1])))
 	return "nop";
 
       operands[1] = riscv_prefetch_cookie (operands[1], operands[2]);
