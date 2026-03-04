@@ -5,7 +5,7 @@
 
 /*
 **test_builtin1:
-**  fsinhz.s fa0,fa0
+**  mips.fsinhz.s fa0,fa0
 **  ret
 */
 float test_builtin1(float x) {
@@ -14,7 +14,7 @@ float test_builtin1(float x) {
 
 /*
 **test_builtin2:
-**  fcoshz.s fa0,fa0
+**  mips.fcoshz.s fa0,fa0
 **  ret
 */
 float test_builtin2(float x) {
@@ -23,7 +23,7 @@ float test_builtin2(float x) {
 
 /*
 **test_builtin3:
-**  ftanhz.s fa0,fa0
+**  mips.ftanhz.s fa0,fa0
 **  ret
 */
 float test_builtin3(float x) {
@@ -32,7 +32,7 @@ float test_builtin3(float x) {
 
 /*
 **test_builtin4:
-**  fversinhz.s fa0,fa0
+**  mips.fversinhz.s fa0,fa0
 **  ret
 */
 float test_builtin4(float x) {
@@ -41,7 +41,7 @@ float test_builtin4(float x) {
 
 /*
 **test_builtin5:
-**  ffrecip.s fa0,fa0
+**  mips.ffrecip.s fa0,fa0
 **  ret
 */
 float test_builtin5(float x) {
@@ -50,7 +50,7 @@ float test_builtin5(float x) {
 
 /*
 **test_builtin6:
-**  ffrsqrt.s fa0,fa0
+**  mips.ffrsqrt.s fa0,fa0
 **  ret
 */
 float test_builtin6(float x) {
@@ -59,7 +59,7 @@ float test_builtin6(float x) {
 
 /*
 **test_builtin7:
-**  fatanhz.s fa0,fa0
+**  mips.fatanhz.s fa0,fa0
 **  ret
 */
 float test_builtin7(float x) {
@@ -68,7 +68,7 @@ float test_builtin7(float x) {
 
 /*
 **test_builtin9:
-**  ffexp2.s fa0,fa0
+**  mips.ffexp2.s fa0,fa0
 **  ret
 */
 float test_builtin9(float x) {
@@ -77,7 +77,7 @@ float test_builtin9(float x) {
 
 /*
 **test_builtin10:
-**  ffsqrt.s fa0,fa0
+**  mips.ffsqrt.s fa0,fa0
 **  ret
 */
 float test_builtin10(float x) {
@@ -86,9 +86,9 @@ float test_builtin10(float x) {
 
 /*
 **test_builtin14:
-**	flti.s fa5,8
+**	mips.flti.s fa5,8
 **	fmul.s	fa5,fa0,fa5
-**	ffexp2.s fa0,fa5
+**	mips.ffexp2.s fa0,fa5
 **	ret
 */
 float test_builtin14(float x) {
@@ -98,17 +98,17 @@ float test_builtin14(float x) {
 /*
 **test_builtin15:
 **  fmul.s	fa5,fa0,fa0
-**  ffrecip.s fa4,fa0
+**  mips.ffrecip.s fa4,fa0
 **  fli.s	fa3,1.0
 **  fsub.s	fa5,fa3,fa5
-**	ffsqrt.s fa3,fa5
-**  ffrsqrt.s fa5,fa5
+**	mips.ffsqrt.s fa3,fa5
+**  mips.ffrsqrt.s fa5,fa5
 **	fmul.s	fa3,fa4,fa3
 **  fmul.s	fa5,fa0,fa5
-**	fatanhz.s fa3,fa3
+**	mips.fatanhz.s fa3,fa3
 **	fli.s	fa4,0.25
 **	fsgnj.s	fa4,fa4,fa0
-**	fatanhz.s fa5,fa5
+**	mips.fatanhz.s fa5,fa5
 **	fsub.s	fa0,fa4,fa3
 **	fmax.s	fa0,fa5,fa0
 **  ret
@@ -120,17 +120,17 @@ float test_builtin15(float x) {
 /*
 **test_builtin17:
 **	fmul.s	fa5,fa0,fa0
-**	ffrecip.s fa4,fa0
+**	mips.ffrecip.s fa4,fa0
 **	fli.s	fa3,1.0
 **	fsub.s	fa5,fa3,fa5
-**	ffsqrt.s fa3,fa5
-**	ffrsqrt.s fa5,fa5
+**	mips.ffsqrt.s fa3,fa5
+**	mips.ffrsqrt.s fa5,fa5
 **	fmul.s	fa3,fa4,fa3
 **	fmul.s	fa5,fa0,fa5
-**	fatanhz.s fa3,fa3
+**	mips.fatanhz.s fa3,fa3
 **	fli.s	fa4,0.25
 **	fsgnj.s	fa4,fa4,fa0
-**	fatanhz.s fa5,fa5
+**	mips.fatanhz.s fa5,fa5
 **	fsub.s	fa4,fa4,fa3
 **	fmax.s	fa4,fa5,fa4
 **	fli.s	fa0,0.5
@@ -144,7 +144,7 @@ float test_builtin17(float x) {
 /*
 **test_builtin20:
 **	fdiv.s	fa0,fa0,fa1
-**	fatanhz.s fa0,fa0
+**	mips.fatanhz.s fa0,fa0
 **	ret
 */
 float test_builtin20(float x, float y) {
@@ -155,9 +155,9 @@ float test_builtin20(float x, float y) {
 **test_builtin22:
 **	fli.s	fa5,0.25
 **	fsub.s	fa5,fa5,fa0
-**	ftanhz.s fa0,fa0
-**	ftanhz.s fa5,fa5
-**	ffrecip.s fa5,fa5
+**	mips.ftanhz.s fa0,fa0
+**	mips.ftanhz.s fa5,fa5
+**	mips.ffrecip.s fa5,fa5
 **	fmax.s	fa0,fa0,fa5
 **	ret
 */
@@ -167,11 +167,11 @@ float test_builtin22(float x) {
 
 /*
 **test_builtin23:
-**  ffrecip.s fa5,fa0
-**  fatanhz.s fa5,fa5
+**  mips.ffrecip.s fa5,fa0
+**  mips.fatanhz.s fa5,fa5
 **  fli.s	fa4,0.25
 **  fsub.s	fa5,fa4,fa5
-**  fatanhz.s fa0,fa0
+**  mips.fatanhz.s fa0,fa0
 **  fmax.s	fa0,fa0,fa5
 **  ret
 */

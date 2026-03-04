@@ -260,7 +260,7 @@
 	(unspec [(match_operand:SI 1 "flti_operand" "zlti")]
 		   UNSPEC_FLTI))]
   "TARGET_XMIPSTRIG"
-  "flti.s %0,%1"
+  "mips.flti.s %0,%1"
   [(set_attr "type" "fsin")]
 )
 
@@ -335,7 +335,7 @@
 	(unspec:SF [(match_operand:SF 1 "register_operand" "f")]
 		   UNSPEC_SIN))]
   "TARGET_XMIPSTRIG"
-  "fsinhz.s %0,%1"
+  "mips.fsinhz.s %0,%1"
   [(set_attr "type" "fsin")]
 )
 
@@ -357,7 +357,7 @@
 	(unspec:SF [(match_operand:SF 1 "register_operand" "f")]
 		   UNSPEC_COS))]
   "TARGET_XMIPSTRIG"
-  "fcoshz.s %0,%1"
+  "mips.fcoshz.s %0,%1"
   [(set_attr "type" "fcos")]
 )
 
@@ -379,7 +379,7 @@
 	(unspec:SF [(match_operand:SF 1 "register_operand" "f")]
 		   UNSPEC_TAN))]
   "TARGET_XMIPSTRIG"
-  "ftanhz.s %0,%1"
+  "mips.ftanhz.s %0,%1"
   [(set_attr "type" "ftan")]
 )
 
@@ -401,7 +401,7 @@
 	(unspec:SF [(match_operand:SF 1 "register_operand" "f")]
 		   UNSPEC_ATAN))]
   "TARGET_XMIPSTRIG"
-  "fatanhz.s %0,%1"
+  "mips.fatanhz.s %0,%1"
   [(set_attr "type" "fatan")]
 )
 
@@ -410,7 +410,7 @@
 	(unspec:SF [(match_operand:SF 1 "register_operand" "f")]
 		   UNSPEC_VERSIN))]
   "TARGET_XMIPSTRIG"
-  "fversinhz.s %0,%1"
+  "mips.fversinhz.s %0,%1"
   [(set_attr "type" "fversin")]
 )
 
@@ -419,7 +419,7 @@
 	(unspec:SF [(match_operand:SF 1 "register_operand" "f")]
 		   UNSPEC_FRECIP))]
   "TARGET_XMIPSTRIG"
-  "ffrecip.s %0,%1"
+  "mips.ffrecip.s %0,%1"
   [(set_attr "type" "ffrecip")]
 )
 
@@ -429,7 +429,7 @@
 		   UNSPEC_FRECIPSQRT))]
   "TARGET_XMIPSTRIG"
   {
-      return "ffrsqrt.s %0,%1";
+      return "mips.ffrsqrt.s %0,%1";
   }
   [(set_attr "type" "ffrecipsqrt")]
 )
@@ -450,7 +450,7 @@
 	(unspec:SF [(match_operand:SF 1 "register_operand" "f")]
 		   UNSPEC_TANH))]
   "TARGET_XMIPSTRIG"
-  "fftanh.s %0,%1"
+  "mips.fftanh.s %0,%1"
   [(set_attr "type" "ftanh")]
 )
 
@@ -522,7 +522,7 @@
 	(unspec:SF [(match_operand:SF 1 "register_operand" "f")]
 		   UNSPEC_LOG2F))]
   "TARGET_XMIPSTRIG"
-  "fflog2.s %0,%1"
+  "mips.fflog2.s %0,%1"
   [(set_attr "type" "flog")]
 )
 
@@ -573,7 +573,7 @@
 	(unspec:SF [(match_operand:SF 1 "register_operand" "f")]
 		   UNSPEC_EXPF))]
   "TARGET_XMIPSTRIG"
-  "ffexp2.s %0,%1"
+  "mips.ffexp2.s %0,%1"
   [(set_attr "type" "fexp")]
 )
 
@@ -582,7 +582,7 @@
 	(unspec:SF [(match_operand:SF 1 "register_operand" "f")]
 		   UNSPEC_FFSQRT))]
   "TARGET_XMIPSTRIG"
-  "ffsqrt.s %0,%1"
+  "mips.ffsqrt.s %0,%1"
   [(set_attr "type" "ffsqrt")]
 )
 

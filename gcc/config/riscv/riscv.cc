@@ -12416,15 +12416,15 @@ riscv_output_join2_insns (rtx *operands, machine_mode mode, bool load_p,
 	   && REGNO (reg2) != REGNO (base1)) || !load_p)) {
     if (offset1 < offset2) {
       if (load_p)
-	return mode == DImode ? "ldp\t%0,%2,%1" : "lwp\t%0,%2,%1";
+	return mode == DImode ? "mips.ldp\t%0,%2,%1" : "mips.lwp\t%0,%2,%1";
       else
-	return mode == DImode ? "sdp\t%z1,%z3,%0" : "swp\t%z1,%z3,%0";
+	return mode == DImode ? "mips.sdp\t%z1,%z3,%0" : "mips.swp\t%z1,%z3,%0";
     }
     else {
       if (load_p)
-	return mode == DImode ? "ldp\t%2,%0,%3" : "lwp\t%2,%0,%3";
+	return mode == DImode ? "mips.ldp\t%2,%0,%3" : "mips.lwp\t%2,%0,%3";
       else
-	return mode == DImode ? "sdp\t%z3,%z1,%2" : "swp\t%z3,%z1,%2";
+	return mode == DImode ? "mips.sdp\t%z3,%z1,%2" : "mips.swp\t%z3,%z1,%2";
     }
   }
 

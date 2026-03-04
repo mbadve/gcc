@@ -6,9 +6,9 @@
 
 /*
 **test_sinf:
-**	flti.s fa5,5
+**	mips.flti.s fa5,5
 **	fmul.s	fa5,fa0,fa5
-**	fsinhz.s fa0,fa5
+**	mips.fsinhz.s fa0,fa5
 **	ret
 */
 extern float sinf(float x);
@@ -18,9 +18,9 @@ float test_sinf(float x) {
 
 /*
 **test_cosf:
-**	flti.s fa5,5
+**	mips.flti.s fa5,5
 **	fmul.s	fa5,fa0,fa5
-**	fcoshz.s fa0,fa5
+**	mips.fcoshz.s fa0,fa5
 **	ret
 */
 extern float cosf(float x);
@@ -30,9 +30,9 @@ float test_cosf(float x) {
 
 /*
 **test_tanf:
-**	flti.s fa5,5
+**	mips.flti.s fa5,5
 **	fmul.s	fa5,fa0,fa5
-**	ftanhz.s fa0,fa5
+**	mips.ftanhz.s fa0,fa5
 **	ret
 */
 extern float tanf(float x);
@@ -42,8 +42,8 @@ float test_tanf(float x) {
 
 /*
 **test_atanf:
-**	fatanhz.s fa0,fa0
-**	flti.s fa5,3
+**	mips.fatanhz.s fa0,fa0
+**	mips.flti.s fa5,3
 **	fmul.s	fa0,fa0,fa5
 **	ret
 */
@@ -54,7 +54,7 @@ float test_atanf(float x) {
 
 /*
 **test_tanh:
-**	fftanh.s fa0,fa0
+**	mips.fftanh.s fa0,fa0
 **	ret
 */
 extern float tanhf(float x);
@@ -64,7 +64,7 @@ float test_tanh(float x) {
 
 /*
 **test_log2f:
-**	fflog2.s fa0,fa0
+**	mips.fflog2.s fa0,fa0
 **	ret
 */
 extern float log2f(float x);
@@ -74,8 +74,8 @@ float test_log2f(float x) {
 
 /*
 **test_logf:
-** fflog2.s fa0,fa0
-** flti.s fa5,6
+** mips.fflog2.s fa0,fa0
+** mips.flti.s fa5,6
 ** fmul.s	fa0,fa0,fa5
 ** ret
 */
@@ -86,8 +86,8 @@ float test_logf(float x) {
 
 /*
 **test_log10:
-** fflog2.s fa0,fa0
-** flti.s fa5,8
+** mips.fflog2.s fa0,fa0
+** mips.flti.s fa5,8
 ** fmul.s	fa0,fa0,fa5
 ** ret
 */
@@ -98,9 +98,9 @@ float test_log10(float x) {
 
 /*
 **test_expf:
-**	flti.s fa5,6
+**	mips.flti.s fa5,6
 **	fmul.s	fa5,fa0,fa5
-**	ffexp2.s fa0,fa5
+**	mips.ffexp2.s fa0,fa5
 **	ret
 */
 extern float expf(float x);
@@ -110,9 +110,9 @@ float test_expf(float x) {
 
 /*
 **test_exp10f:
-**	flti.s fa5,8
+**	mips.flti.s fa5,8
 **	fmul.s	fa5,fa0,fa5
-**	ffexp2.s fa0,fa5
+**	mips.ffexp2.s fa0,fa5
 **	ret
 */
 extern float exp10f(float x);
@@ -123,20 +123,20 @@ float test_exp10f(float x) {
 /*
 **test_asinf:
 **	fmul.s	fa5,fa0,fa0
-**	ffrecip.s fa4,fa0
+**	mips.ffrecip.s fa4,fa0
 **	fli.s	fa3,1.0
 **	fsub.s	fa5,fa3,fa5
-**	ffsqrt.s fa3,fa5
-**	ffrsqrt.s fa5,fa5
+**	mips.ffsqrt.s fa3,fa5
+**	mips.ffrsqrt.s fa5,fa5
 **	fmul.s	fa3,fa4,fa3
 **	fmul.s	fa5,fa0,fa5
-**	fatanhz.s fa3,fa3
+**	mips.fatanhz.s fa3,fa3
 **	fli.s	fa4,0.25
 **	fsgnj.s	fa4,fa4,fa0
-**	fatanhz.s fa5,fa5
+**	mips.fatanhz.s fa5,fa5
 **	fsub.s	fa4,fa4,fa3
 **	fmax.s	fa4,fa5,fa4
-**	flti.s fa0,3
+**	mips.flti.s fa0,3
 **	fmul.s	fa0,fa4,fa0
 **	ret
 */
@@ -148,22 +148,22 @@ float test_asinf(float x) {
 /*
 **test_acosf:
 **	fmul.s	fa4,fa0,fa0
-**	ffrecip.s fa5,fa0
+**	mips.ffrecip.s fa5,fa0
 **	fli.s	fa3,1.0
 **	fsub.s	fa4,fa3,fa4
-**	ffsqrt.s fa3,fa4
-**	ffrsqrt.s fa4,fa4
+**	mips.ffsqrt.s fa3,fa4
+**	mips.ffrsqrt.s fa4,fa4
 **	fmul.s	fa3,fa5,fa3
 **	fmul.s	fa4,fa0,fa4
-**	fatanhz.s fa3,fa3
+**	mips.fatanhz.s fa3,fa3
 **	fli.s	fa5,0.25
 **	fsgnj.s	fa5,fa5,fa0
-**	fatanhz.s fa4,fa4
+**	mips.fatanhz.s fa4,fa4
 **	fsub.s	fa5,fa5,fa3
 **	fmax.s	fa5,fa4,fa5
 **	fli.s	fa4,0.5
 **	fsub.s	fa5,fa4,fa5
-**	flti.s fa0,3
+**	mips.flti.s fa0,3
 **	fmul.s	fa0,fa5,fa0
 **	ret
 */
@@ -175,8 +175,8 @@ float test_acosf(float x) {
 /*
 **test_atan2f:
 **	fdiv.s	fa0,fa0,fa1
-**	fatanhz.s fa0,fa0
-**	flti.s fa5,3
+**	mips.fatanhz.s fa0,fa0
+**	mips.flti.s fa5,3
 **	fmul.s	fa0,fa0,fa5
 **	ret
 */
@@ -190,7 +190,7 @@ float test_atan2f(float x, float y) {
 **  fmul.s	fa0,fa0,fa0
 **	fmul.s	fa1,fa1,fa1
 **	fadd.s	fa1,fa1,fa0
-**	ffsqrt.s fa0,fa1
+**	mips.ffsqrt.s fa0,fa1
 **	ret
 */
 extern float hypotf(float x, float y);
