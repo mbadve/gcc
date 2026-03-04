@@ -441,6 +441,7 @@ static const struct riscv_ext_version riscv_ext_version_table[] =
   {"xventanacondops", ISA_SPEC_CLASS_NONE, 1, 0},
 
   {"xmipscmov", ISA_SPEC_CLASS_NONE, 1, 0},
+  {"xmipsexectl", ISA_SPEC_CLASS_NONE, 1, 0},
   {"xmipscbop", ISA_SPEC_CLASS_NONE, 1, 0},
   {"xmipslsp", ISA_SPEC_CLASS_NONE, 1, 0},
 
@@ -1783,6 +1784,7 @@ static const riscv_ext_flag_table_t riscv_ext_flag_table[] =
   RISCV_EXT_FLAG_ENTRY ("xventanacondops", x_riscv_xventana_subext, MASK_XVENTANACONDOPS),
 
   RISCV_EXT_FLAG_ENTRY ("xmipscmov", x_riscv_xmips_subext, MASK_XMIPSCMOV),
+  RISCV_EXT_FLAG_ENTRY ("xmipsexectl", x_riscv_xmips_subext, MASK_XMIPSEXECTL),
   RISCV_EXT_FLAG_ENTRY ("xmipscbop", x_riscv_xmips_subext, MASK_XMIPSCBOP),
   RISCV_EXT_FLAG_ENTRY ("xmipslsp", x_riscv_xmips_subext, MASK_XMIPSLSP),
   RISCV_EXT_FLAG_ENTRY ("xmipstrig", x_riscv_xmips_subext, MASK_XMIPSTRIG),
