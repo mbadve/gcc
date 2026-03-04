@@ -309,9 +309,9 @@
   "TARGET_XMIPSTRIG"
   {
     rtx temp = riscv_output_asinf_hz (operands[0], operands[1]);
-    rtx const_0_5 = riscv_get_trig_const(FLI_CONST_0_5_INDEX);
+    rtx const_0_25 = riscv_get_trig_const(FLI_CONST_0_25_INDEX);
     rtx temp_reg1 = gen_reg_rtx (SFmode);
-    emit_move_insn(temp_reg1, const_0_5);
+    emit_move_insn(temp_reg1, const_0_25);
     emit_insn (gen_subsf3(operands[0], temp_reg1, temp));
     DONE;
   }
