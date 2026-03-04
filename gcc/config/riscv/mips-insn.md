@@ -484,7 +484,7 @@
 		   UNSPEC_LOG10F))]
   "TARGET_XMIPSTRIG"
   {
-    rtx scalereg = riscv_get_trig_scale_value(FLTI_CONST_LOG2_OF_10);
+    rtx scalereg = riscv_get_trig_scale_value(FLTI_CONST_LOG10_OF_2);
     emit_insn (gen_riscv_mips_fflog2 (operands[0], operands[1]));
     emit_insn (gen_mulsf3(operands[0], operands[0], scalereg));
     DONE;
@@ -510,7 +510,7 @@
 		   UNSPEC_LOG10F))]
   "TARGET_XMIPSTRIG"
   {
-    rtx scalereg = riscv_get_trig_scale_value(FLTI_CONST_LOG2_OF_10);
+    rtx scalereg = riscv_get_trig_scale_value(FLTI_CONST_LOG10_OF_2);
     emit_insn (gen_riscv_mips_fflog2 (operands[0], operands[1]));
     emit_insn (gen_mulsf3(operands[0], operands[0], scalereg));
     DONE;
@@ -532,7 +532,7 @@
 		   UNSPEC_EXPF))]
   "TARGET_XMIPSTRIG"
   {
-    rtx scalereg = riscv_get_trig_scale_value(FLTI_CONST_LN_OF_2);
+    rtx scalereg = riscv_get_trig_scale_value(FLTI_CONST_LOG2_OF_E);
     emit_insn (gen_mulsf3(scalereg, operands[1], scalereg));
     emit_insn (gen_riscv_mips_ffexp2 (operands[0], scalereg));
 
