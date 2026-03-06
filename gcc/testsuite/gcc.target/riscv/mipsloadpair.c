@@ -1,5 +1,6 @@
 /* { dg-do compile } */
 /* { dg-options "-fpointer-chasing -march=rv64gc_xmipslsp -mtune=mips-p8700 -mno-double-align" { target { rv64 } } } */
+/* { dg-options "-fpointer-chasing -march=rv32gc_xmipslsp -mtune=mips-m8500 -mno-double-align" { target { rv32 } } } */
 /* { dg-skip-if "" { *-*-* } { "-O0" "-Os" "-O1" "-Og" "-g" "-Oz" } } */
 
 typedef struct mylist
@@ -16,4 +17,4 @@ MYLIST *test1(MYLIST *start, long value)
   return start;
 }
 
-/* { dg-final { scan-assembler-times "ldp" 1 } } */
+/* { dg-final { scan-assembler-times "ldp|lwp" 1 } } */

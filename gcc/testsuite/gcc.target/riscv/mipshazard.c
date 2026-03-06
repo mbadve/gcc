@@ -1,5 +1,5 @@
 /* { dg-do compile } */
-/* { dg-options "-march=rv64gc -mremove-back-to-back-branches" } */
+/* { dg-options "-mremove-back-to-back-branches" } */
 /* { dg-skip-if "" { *-*-* } { "-O0" "-O1" "-O2" "-O3" } } */
 
 void 
