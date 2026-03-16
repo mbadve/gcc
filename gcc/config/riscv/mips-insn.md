@@ -261,7 +261,7 @@
 		   UNSPEC_FLTI))]
   "TARGET_XMIPSTRIG"
   "mips.flti.s %0,%1"
-  [(set_attr "type" "fsin")]
+  [(set_attr "type" "flti")]
 )
 
 ;; xmipstrig instructions
@@ -336,7 +336,7 @@
 		   UNSPEC_SIN))]
   "TARGET_XMIPSTRIG"
   "mips.fsinhz.s %0,%1"
-  [(set_attr "type" "fsin")]
+  [(set_attr "type" "ftrig")]
 )
 
 (define_expand "cossf2"
@@ -358,7 +358,7 @@
 		   UNSPEC_COS))]
   "TARGET_XMIPSTRIG"
   "mips.fcoshz.s %0,%1"
-  [(set_attr "type" "fcos")]
+  [(set_attr "type" "ftrig")]
 )
 
 (define_expand "tansf2"
@@ -380,7 +380,7 @@
 		   UNSPEC_TAN))]
   "TARGET_XMIPSTRIG"
   "mips.ftanhz.s %0,%1"
-  [(set_attr "type" "ftan")]
+  [(set_attr "type" "ftrig")]
 )
 
 (define_expand "atansf2"
@@ -402,7 +402,7 @@
 		   UNSPEC_ATAN))]
   "TARGET_XMIPSTRIG"
   "mips.fatanhz.s %0,%1"
-  [(set_attr "type" "fatan")]
+  [(set_attr "type" "ftrig")]
 )
 
 (define_insn "riscv_mips_fversinhz"
@@ -411,7 +411,7 @@
 		   UNSPEC_VERSIN))]
   "TARGET_XMIPSTRIG"
   "mips.fversinhz.s %0,%1"
-  [(set_attr "type" "fversin")]
+  [(set_attr "type" "ftrig")]
 )
 
 (define_insn "riscv_mips_ffrecip"
@@ -420,7 +420,7 @@
 		   UNSPEC_FRECIP))]
   "TARGET_XMIPSTRIG"
   "mips.ffrecip.s %0,%1"
-  [(set_attr "type" "ffrecip")]
+  [(set_attr "type" "ftrig")]
 )
 
 (define_insn "riscv_mips_ffrsqrt"
@@ -431,7 +431,7 @@
   {
       return "mips.ffrsqrt.s %0,%1";
   }
-  [(set_attr "type" "ffrecipsqrt")]
+  [(set_attr "type" "ftrig")]
 )
 
 (define_expand "tanhsf2"
@@ -451,7 +451,7 @@
 		   UNSPEC_TANH))]
   "TARGET_XMIPSTRIG"
   "mips.fftanh.s %0,%1"
-  [(set_attr "type" "ftanh")]
+  [(set_attr "type" "ftrig")]
 )
 
 (define_expand "log2sf2"
@@ -523,7 +523,7 @@
 		   UNSPEC_LOG2F))]
   "TARGET_XMIPSTRIG"
   "mips.fflog2.s %0,%1"
-  [(set_attr "type" "flog")]
+  [(set_attr "type" "ftrig")]
 )
 
 (define_expand "expsf2"
@@ -574,7 +574,7 @@
 		   UNSPEC_EXPF))]
   "TARGET_XMIPSTRIG"
   "mips.ffexp2.s %0,%1"
-  [(set_attr "type" "fexp")]
+  [(set_attr "type" "ftrig")]
 )
 
 (define_insn "riscv_mips_ffsqrt"
@@ -583,7 +583,7 @@
 		   UNSPEC_FFSQRT))]
   "TARGET_XMIPSTRIG"
   "mips.ffsqrt.s %0,%1"
-  [(set_attr "type" "ffsqrt")]
+  [(set_attr "type" "ftrig")]
 )
 
 (define_expand "hypotsf3"
