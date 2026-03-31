@@ -2525,7 +2525,8 @@ riscv*-*-linux*)
 	xno) ;;
 	xyes)
 	  case ${target} in
-	    *-mti-*) tmake_file="${tmake_file} riscv/t-mti-linux-multilib" ;;
+	    *32-mti-*) tmake_file="${tmake_file} riscv/t-mti32-linux-multilib" ;;
+	    *64-mti-*) tmake_file="${tmake_file} riscv/t-mti-linux-multilib" ;;
 	    *) tmake_file="${tmake_file} riscv/t-linux-multilib" ;;
 	  esac
 	  ;;
