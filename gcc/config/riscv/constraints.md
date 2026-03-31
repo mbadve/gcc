@@ -318,7 +318,7 @@
 
 (define_address_constraint "ZD"
   "An address operand that is valid for a mips prefetch instruction"
-  (match_test "riscv_prefetch_offset_address_p (op, mode)"))
+  (match_operand 0 "mips_prefetch_operand"))
 
 (define_constraint "zlti"
   "Integer constant for MIPS FLTI instruction."

@@ -1433,9 +1433,6 @@ enum flti_index {
 
 #define TARGET_HAS_FMV_TARGET_ATTRIBUTE 0
 
-/* mips pref valid offset range.  */
-#define MIPS_RISCV_9BIT_OFFSET_P(OFFSET) (IN_RANGE (OFFSET, 0, 511))
-
 /* mips pref cache hint type.  */
 typedef enum {
     ICACHE_HINT = 0 << 3,
