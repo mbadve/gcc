@@ -2559,7 +2559,8 @@ riscv*-*-elf* | riscv*-*-rtems*)
 		  xno) ;;
 		  xyes)
 		    case ${target} in
-		      *-mti-*) tmake_file="${tmake_file} riscv/t-mti-elf-multilib" ;;
+		      *32-mti-*) tmake_file="${tmake_file} riscv/t-mti32-elf-multilib" ;;
+		      *64-mti-*) tmake_file="${tmake_file} riscv/t-mti-elf-multilib" ;;
 		      *) tmake_file="${tmake_file} riscv/t-elf-multilib" ;;
 		    esac
 		    ;;
