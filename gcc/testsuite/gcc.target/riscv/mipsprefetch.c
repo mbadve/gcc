@@ -1,7 +1,7 @@
 /* pic used here to prevent the assembler to emit .nopic directive.  */
 /* { dg-do compile } */
-/* { dg-options "-march=rv32imafd_xmipscbop -fpic" { target { rv32 } } } */
-/* { dg-options "-march=rv64imafd_xmipscbop -fpic -mabi=lp64d" { target { rv64 } } } */
+/* { dg-options "-march=rv32imafd_xmipscbop -fpic -mtune=mips-p8700" { target { rv32 } } } */
+/* { dg-options "-march=rv64imafd_xmipscbop -fpic -mtune=mips-p8700 -mabi=lp64d" { target { rv64 } } } */
 /* { dg-skip-if "" { *-*-* } { "-O0" "-Og" } } */
 
 
