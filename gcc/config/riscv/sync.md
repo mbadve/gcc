@@ -814,7 +814,7 @@
   rtx shifted_set = gen_reg_rtx (SImode);
   riscv_lshift_subword (QImode, set, shift, &shifted_set);
 
-  if (TARGET_ZAAMO)
+  if (!TARGET_ZALRSC || (TARGET_ZAAMO && !TARGET_PREFER_LRSC))
     emit_insn (gen_amo_atomic_fetch_orsi (old, aligned_mem, shifted_set, model));
   else if (TARGET_ZALRSC)
     emit_insn (gen_lrsc_atomic_fetch_orsi (old, aligned_mem, shifted_set, model));
