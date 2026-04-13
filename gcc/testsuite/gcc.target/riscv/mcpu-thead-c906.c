@@ -1,6 +1,6 @@
-/* { dg-do compile } */
+/* { dg-do compile { target { rv64 } } } */
 /* { dg-skip-if "-march given" { *-*-* } { "-march=*" } } */
-/* { dg-options "-mcpu=thead-c906" { target { rv64 } } } */
+/* { dg-options "-mcpu=thead-c906" } */
 /* T-Head XuanTie C906 => rv64imafdc */
 
 #if !((__riscv_xlen == 64)		\
