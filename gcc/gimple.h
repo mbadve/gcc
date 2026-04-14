@@ -250,6 +250,9 @@ struct GTY((desc ("gimple_statement_structure (&%h)"), tag ("GSS_BASE"),
   /* Nonzero if this statement contains volatile operands.  */
   unsigned has_volatile_ops 	: 1;
 
+  /* Infrastructure local flag.  Always clear.  */
+  unsigned ilf			: 1;
+
   /* Padding to get subcode to 16 bit alignment.  */
   unsigned pad			: 1;
 

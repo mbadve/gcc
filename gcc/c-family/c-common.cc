@@ -46,6 +46,7 @@ along with GCC; see the file COPYING3.  If not see
 #include "tree-iterator.h"
 #include "opts.h"
 #include "gimplify.h"
+#include "internal-fn.h"
 #include "substring-locations.h"
 #include "spellcheck.h"
 #include "c-spellcheck.h"
@@ -8660,6 +8661,10 @@ resolve_overloaded_builtin (location_t loc, tree function,
     case BUILT_IN_ATOMIC_FETCH_NAND_N:
     case BUILT_IN_ATOMIC_FETCH_XOR_N:
     case BUILT_IN_ATOMIC_FETCH_OR_N:
+    case BUILT_IN_ATOMIC_FETCH_MIN:
+    case BUILT_IN_ATOMIC_FETCH_MAX:
+    case BUILT_IN_ATOMIC_MIN_FETCH:
+    case BUILT_IN_ATOMIC_MAX_FETCH:
       orig_format = false;
       /* FALLTHRU */
     case BUILT_IN_SYNC_FETCH_AND_ADD_N:
@@ -8689,11 +8694,13 @@ resolve_overloaded_builtin (location_t loc, tree function,
 
 	int n = sync_resolve_size (function, params, fetch_op, orig_format,
 				   complain);
-	tree new_function, first_param, result;
+	tree new_function, result;
 	enum built_in_function fncode;
 
 	if (n == 0)
 	  return error_mark_node;
+
+	tree first_param = (*params)[0];
 
 	if (n == -1)
 	  {
@@ -8710,13 +8717,60 @@ resolve_overloaded_builtin (location_t loc, tree function,
 						       params);
 	  }
 
+	/* Atomic fetch min/max builtins are implemented through an IFN
+	   that will be either lowered to a CAS loop or a direct builtin
+	   depending on the target.  */
+	if (orig_code == BUILT_IN_ATOMIC_FETCH_MIN
+	    || orig_code == BUILT_IN_ATOMIC_FETCH_MAX
+	    || orig_code == BUILT_IN_ATOMIC_MIN_FETCH
+	    || orig_code == BUILT_IN_ATOMIC_MAX_FETCH)
+	  {
+	    if (params->length () != 3)
+	      {
+		if (complain)
+		  {
+		    if (params->length () < 3)
+		      error_at (loc, "too few arguments to function %qE",
+				function);
+		    else
+		      error_at (loc, "too many arguments to function %qE",
+				function);
+		  }
+		return error_mark_node;
+	      }
+
+	    bool is_min = (orig_code == BUILT_IN_ATOMIC_FETCH_MIN
+			   || orig_code == BUILT_IN_ATOMIC_MIN_FETCH);
+	    bool is_fetch_op = (orig_code == BUILT_IN_ATOMIC_FETCH_MIN
+				|| orig_code == BUILT_IN_ATOMIC_FETCH_MAX);
+
+	    tree datatype = TREE_TYPE (TREE_TYPE (first_param));
+	    bool is_signed = !TYPE_UNSIGNED (datatype);
+
+	    tree ptr = (*params)[0];
+	    tree value = (*params)[1];
+	    tree memorder = (*params)[2];
+	    tree is_min_tree
+	      = build_int_cst (integer_type_node, is_min ? 1 : 0);
+	    tree is_fetch_op_tree
+	      = build_int_cst (integer_type_node, is_fetch_op ? 1 : 0);
+	    tree is_signed_tree
+	      = build_int_cst (integer_type_node, is_signed ? 1 : 0);
+
+	    tree ret
+	      = build_call_expr_internal_loc (loc, IFN_ATOMIC_FETCH_MINMAX,
+					      datatype, 6, ptr, value, memorder,
+					      is_min_tree, is_fetch_op_tree,
+					      is_signed_tree);
+
+	    return sync_resolve_return (first_param, ret, orig_format);
+	  }
 	fncode = (enum built_in_function)((int)orig_code + exact_log2 (n) + 1);
 	new_function = builtin_decl_explicit (fncode);
 	if (!sync_resolve_params (loc, function, new_function, params,
 				  orig_format, complain))
 	  return error_mark_node;
 
-	first_param = (*params)[0];
 	result = build_function_call_vec (loc, vNULL, new_function, params,
 					  NULL);
 	if (result == error_mark_node)

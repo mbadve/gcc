@@ -3626,6 +3626,14 @@ expand_ATOMIC_XOR_FETCH_CMP_0 (internal_fn, gcall *call)
   expand_ifn_atomic_op_fetch_cmp_0 (call);
 }
 
+/* Expand atomic fetch minmax.  */
+
+static void
+expand_ATOMIC_FETCH_MINMAX (internal_fn, gcall *call)
+{
+  expand_ifn_atomic_fetch_minmax (call);
+}
+
 /* Expand LAUNDER to assignment, lhs = arg0.  */
 
 static void

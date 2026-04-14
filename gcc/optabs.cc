@@ -1694,7 +1694,7 @@ expand_binop (machine_mode mode, optab binoptab, rtx op0, rtx op1,
 	    if (temp)
 	      {
 		if (mclass != MODE_INT
-                    || !TRULY_NOOP_TRUNCATION_MODES_P (mode, wider_mode))
+			|| !TRULY_NOOP_TRUNCATION_MODES_P (mode, wider_mode))
 		  {
 		    if (target == 0)
 		      target = gen_reg_rtx (mode);
@@ -1708,6 +1708,94 @@ expand_binop (machine_mode mode, optab binoptab, rtx op0, rtx op1,
 	      delete_insns_since (last);
 	  }
       }
+
+  /* Implement MIN/MAX expansion as a compare and branch/conditional move.  */
+  if ((binoptab == smin_optab || binoptab == smax_optab
+       || binoptab == umin_optab || binoptab == umax_optab)
+      && !VECTOR_MODE_P (mode) && methods != OPTAB_DIRECT)
+    {
+      bool is_max = (binoptab == smax_optab || binoptab == umax_optab);
+      rtx_code_label *lab;
+
+      if (target == NULL_RTX || !REG_P (target))
+	target = gen_reg_rtx (mode);
+
+      /* If op1 was placed in target, swap op0 and op1.  */
+      if (target != op0 && target == op1)
+	std::swap (op0, op1);
+
+      /* We generate better code and avoid problems with op1 mentioning
+	 target by forcing op1 into a pseudo if it isn't a constant.  */
+      if (!CONSTANT_P (op1))
+	op1 = force_reg (mode, op1);
+
+      {
+	enum rtx_code comparison_code;
+	rtx cmpop1 = op1;
+
+	if (is_max)
+	  comparison_code = unsignedp ? GEU : GE;
+	else
+	  comparison_code = unsignedp ? LEU : LE;
+
+	/* Canonicalize to comparisons against 0.  */
+	if (op1 == const1_rtx)
+	  {
+	    /* Converting (a >= 1 ? a : 1) into (a > 0 ? a : 1)
+	       or (a != 0 ? a : 1) for unsigned.
+	       For MIN we are safe converting (a <= 1 ? a : 1)
+	       into (a <= 0 ? a : 1)  */
+	    cmpop1 = const0_rtx;
+	    if (is_max)
+	      comparison_code = unsignedp ? NE : GT;
+	  }
+	if (op1 == constm1_rtx && !unsignedp)
+	  {
+	    /* Converting (a >= -1 ? a : -1) into (a >= 0 ? a : -1)
+	       and (a <= -1 ? a : -1) into (a < 0 ? a : -1) */
+	    cmpop1 = const0_rtx;
+	    if (!is_max)
+	      comparison_code = LT;
+	  }
+
+	/* Use a conditional move if possible.  */
+	if (can_conditionally_move_p (mode))
+	  {
+	    rtx insn;
+
+	    start_sequence ();
+
+	    /* Try to emit the conditional move.  */
+	    insn = emit_conditional_move (target,
+					  {comparison_code, op0, cmpop1, mode},
+					  op0, op1, mode, unsignedp);
+
+	    /* If we could do the conditional move, emit the sequence,
+	       and return.  */
+	    if (insn)
+	      {
+		//rtx_insn *seq = end_sequence ();
+		end_sequence ();
+		return target;
+	      }
+
+	    /* Otherwise discard the sequence and fall back to code with
+	       branches.  */
+	    end_sequence ();
+	  }
+
+	if (target != op0)
+	  emit_move_insn (target, op0);
+
+	lab = gen_label_rtx ();
+	do_compare_rtx_and_jump (target, cmpop1, comparison_code, unsignedp,
+				 mode, NULL_RTX, NULL, lab,
+				 profile_probability::uninitialized ());
+      }
+      emit_move_insn (target, op1);
+      emit_label (lab);
+      return target;
+    }
 
   /* If operation is commutative,
      try to make the first operand a register.
@@ -7562,6 +7650,42 @@ get_atomic_op_for_code (struct atomic_op_functions *op, enum rtx_code code)
       op->no_result = sync_nand_optab;
       op->reverse_code = UNKNOWN;
       break;
+    case SMIN:
+      op->mem_fetch_before = atomic_fetch_smin_optab;
+      op->mem_fetch_after = atomic_smin_fetch_optab;
+      op->mem_no_result = atomic_smin_optab;
+      op->fetch_before = sync_old_smin_optab;
+      op->fetch_after = sync_new_smin_optab;
+      op->no_result = sync_smin_optab;
+      op->reverse_code = UNKNOWN;
+      break;
+    case SMAX:
+      op->mem_fetch_before = atomic_fetch_smax_optab;
+      op->mem_fetch_after = atomic_smax_fetch_optab;
+      op->mem_no_result = atomic_smax_optab;
+      op->fetch_before = sync_old_smax_optab;
+      op->fetch_after = sync_new_smax_optab;
+      op->no_result = sync_smax_optab;
+      op->reverse_code = UNKNOWN;
+      break;
+    case UMIN:
+      op->mem_fetch_before = atomic_fetch_umin_optab;
+      op->mem_fetch_after = atomic_umin_fetch_optab;
+      op->mem_no_result = atomic_umin_optab;
+      op->fetch_before = sync_old_umin_optab;
+      op->fetch_after = sync_new_umin_optab;
+      op->no_result = sync_umin_optab;
+      op->reverse_code = UNKNOWN;
+      break;
+    case UMAX:
+      op->mem_fetch_before = atomic_fetch_umax_optab;
+      op->mem_fetch_after = atomic_umax_fetch_optab;
+      op->mem_no_result = atomic_umax_optab;
+      op->fetch_before = sync_old_umax_optab;
+      op->fetch_after = sync_new_umax_optab;
+      op->no_result = sync_umax_optab;
+      op->reverse_code = UNKNOWN;
+      break;
     default:
       gcc_unreachable ();
     }
@@ -7749,6 +7873,11 @@ expand_atomic_fetch_op_no_fallback (rtx target, rtx mem, rtx val,
 					    true, OPTAB_LIB_WIDEN);
 	      result = expand_simple_unop (mode, NOT, result, target, true);
 	    }
+	  else if (code == SMIN || code == SMAX)
+	    {
+	      result = expand_simple_binop (mode, code, result, val, target,
+					    false, OPTAB_LIB_WIDEN);
+	    }
 	  else
 	    result = expand_simple_binop (mode, code, result, val, target,
 					  true, OPTAB_LIB_WIDEN);
@@ -7875,6 +8004,11 @@ expand_atomic_fetch_op (rtx target, rtx mem, rtx val, enum rtx_code code,
 	  t1 = expand_simple_binop (mode, AND, t1, val, NULL_RTX,
 				    true, OPTAB_LIB_WIDEN);
 	  t1 = expand_simple_unop (mode, code, t1, NULL_RTX, true);
+	}
+      else if (code == SMIN || code == SMAX)
+	{
+	  t1 = expand_simple_binop (mode, code, t1, val, NULL_RTX,
+				    false, OPTAB_LIB_WIDEN);
 	}
       else
 	t1 = expand_simple_binop (mode, code, t1, val, NULL_RTX, true,

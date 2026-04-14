@@ -245,7 +245,7 @@
 (define_code_iterator scc_0  [eq ne gt gtu])
 
 ; atomics code iterator
-(define_code_iterator any_atomic [plus ior xor and])
+(define_code_iterator any_atomic [plus ior xor and smin smax umin umax])
 
 ; bitmanip code iterators
 (define_code_iterator bitmanip_bitwise [and ior])
@@ -355,8 +355,14 @@
 			(us_minus "ssubu")])
 
 ; atomics code attribute
-(define_code_attr atomic_optab
-  [(plus "add") (ior "or") (xor "xor") (and "and")])
+(define_code_attr atomic_optab [(plus "add")
+			(ior "or")
+			(xor "xor")
+			(and "and")
+			(smin "smin")
+			(smax "smax")
+			(umin "umin")
+			(umax "umax")])
 
 ; bitmanip code attributes
 ;; Unsigned variant of a min/max optab.

@@ -81,6 +81,7 @@ along with GCC; see the file COPYING3.  If not see
 	  /* After CCP we rewrite no longer addressed locals into SSA
 	     form if possible.  */
 	  NEXT_PASS (pass_forwprop, /*last=*/false);
+		  NEXT_PASS (pass_transform_cas_loops_to_minmax);
           NEXT_PASS (pass_early_thread_jumps, /*first=*/true);
 	  NEXT_PASS (pass_sra_early);
 	  /* pass_build_ealias is a dummy pass that ensures that we
@@ -195,6 +196,7 @@ along with GCC; see the file COPYING3.  If not see
   NEXT_PASS (pass_omp_target_link);
   NEXT_PASS (pass_adjust_alignment);
   NEXT_PASS (pass_harden_control_flow_redundancy);
+  NEXT_PASS (pass_lower_ifn_atomic_minmax);
   NEXT_PASS (pass_all_optimizations);
   PUSH_INSERT_PASSES_WITHIN (pass_all_optimizations)
       NEXT_PASS (pass_remove_cgraph_callee_edges);

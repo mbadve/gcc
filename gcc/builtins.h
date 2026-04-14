@@ -133,6 +133,7 @@ extern void expand_builtin_trap (void);
 extern void expand_ifn_atomic_bit_test_and (gcall *);
 extern void expand_ifn_atomic_compare_exchange (gcall *);
 extern void expand_ifn_atomic_op_fetch_cmp_0 (gcall *);
+extern void expand_ifn_atomic_fetch_minmax (gcall *);
 extern rtx expand_builtin_crc_table_based (internal_fn, scalar_mode,
 					   scalar_mode, machine_mode,
 					   tree, rtx);

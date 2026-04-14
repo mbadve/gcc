@@ -213,12 +213,14 @@
     (match_operand:SI 4 "register_operand" "rI")		   ;; mask
     (match_operand:SI 5 "register_operand" "rI")		   ;; not_mask
     (clobber (match_scratch:SI 6 "=&r"))			   ;; tmp_1
-    (clobber (match_scratch:SI 7 "=&r"))]			   ;; tmp_2
+    (clobber (match_scratch:SI 7 "=&r"))			   ;; tmp_2
+    (clobber (match_scratch:SI 8 "=&r"))]       ;; tmp_3
   "TARGET_ZALRSC && TARGET_INLINE_SUBWORD_ATOMIC"
   {
     return "1:\;"
 	   "lr.w%I3\t%0, %1\;"
-	   "<insn>\t%6, %0, %2\;"
+     "and\t%8, %0, %4\;"
+	   "<insn>\t%6, %8, %2\;"
 	   "and\t%6, %6, %4\;"
 	   "and\t%7, %0, %5\;"
 	   "or\t%7, %7, %6\;"

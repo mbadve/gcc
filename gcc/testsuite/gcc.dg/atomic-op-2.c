@@ -6,6 +6,8 @@
 
 /* Test the execution of the __atomic_*OP builtin routines for a short.  */
 
+#include "limits.h"
+
 extern void abort(void);
 
 short v, count, res;
@@ -165,6 +167,114 @@ test_fetch_or ()
 
   count *= 2;
   if (__atomic_fetch_or (&v, count, __ATOMIC_SEQ_CST) !=  31) 
+    abort ();
+}
+
+void
+test_fetch_smin ()
+{
+  short sv = 10;
+
+  if (__atomic_fetch_min (&sv, 5, __ATOMIC_RELAXED) != 10)
+    abort ();
+
+  if (__atomic_fetch_min (&sv, 5, __ATOMIC_CONSUME) != 5)
+    abort ();
+
+  if (__atomic_fetch_min (&sv, -10, __ATOMIC_ACQUIRE) != 5)
+    abort ();
+
+  if (__atomic_fetch_min (&sv, -20, __ATOMIC_RELEASE) != -10)
+    abort ();
+
+  if (__atomic_fetch_min (&sv, SHRT_MIN, __ATOMIC_ACQ_REL) != -20)
+    abort ();
+
+  if (__atomic_fetch_min (&sv, SHRT_MAX, __ATOMIC_SEQ_CST) != SHRT_MIN)
+    abort ();
+
+  if (sv != SHRT_MIN)
+    abort ();
+}
+
+void
+test_fetch_umin ()
+{
+  unsigned short uv = 100;
+
+  if (__atomic_fetch_min (&uv, 50, __ATOMIC_RELAXED) != 100)
+    abort ();
+
+  if (__atomic_fetch_min (&uv, 50, __ATOMIC_CONSUME) != 50)
+    abort ();
+
+  if (__atomic_fetch_min (&uv, 75, __ATOMIC_ACQUIRE) != 50)
+    abort ();
+
+  if (__atomic_fetch_min (&uv, 10, __ATOMIC_RELEASE) != 50)
+    abort ();
+
+  if (__atomic_fetch_min (&uv, 0, __ATOMIC_ACQ_REL) != 10)
+    abort ();
+
+  if (__atomic_fetch_min (&uv, USHRT_MAX, __ATOMIC_SEQ_CST) != 0)
+    abort ();
+
+  if (uv != 0)
+    abort ();
+}
+
+void
+test_fetch_smax ()
+{
+  short sv = -10;
+
+  if (__atomic_fetch_max (&sv, -5, __ATOMIC_RELAXED) != -10)
+    abort ();
+
+  if (__atomic_fetch_max (&sv, -5, __ATOMIC_CONSUME) != -5)
+    abort ();
+
+  if (__atomic_fetch_max (&sv, -20, __ATOMIC_ACQUIRE) != -5)
+    abort ();
+
+  if (__atomic_fetch_max (&sv, 10, __ATOMIC_RELEASE) != -5)
+    abort ();
+
+  if (__atomic_fetch_max (&sv, 50, __ATOMIC_ACQ_REL) != 10)
+    abort ();
+
+  if (__atomic_fetch_max (&sv, SHRT_MAX, __ATOMIC_SEQ_CST) != 50)
+    abort ();
+
+  if (sv != SHRT_MAX)
+    abort ();
+}
+
+void
+test_fetch_umax ()
+{
+  unsigned short uv = 10;
+
+  if (__atomic_fetch_max (&uv, 50, __ATOMIC_RELAXED) != 10)
+    abort ();
+
+  if (__atomic_fetch_max (&uv, 50, __ATOMIC_CONSUME) != 50)
+    abort ();
+
+  if (__atomic_fetch_max (&uv, 30, __ATOMIC_ACQUIRE) != 50)
+    abort ();
+
+  if (__atomic_fetch_max (&uv, 100, __ATOMIC_RELEASE) != 50)
+    abort ();
+
+  if (__atomic_fetch_max (&uv, 200, __ATOMIC_ACQ_REL) != 100)
+    abort ();
+
+  if (__atomic_fetch_max (&uv, USHRT_MAX, __ATOMIC_SEQ_CST) != 200)
+    abort ();
+
+  if (uv != USHRT_MAX)
     abort ();
 }
 
@@ -329,6 +439,113 @@ test_or_fetch ()
     abort ();
 }
 
+void
+test_smin_fetch ()
+{
+  short sv = 10;
+
+  if (__atomic_min_fetch (&sv, 5, __ATOMIC_RELAXED) != 5)
+    abort ();
+
+  if (__atomic_min_fetch (&sv, 5, __ATOMIC_CONSUME) != 5)
+    abort ();
+
+  if (__atomic_min_fetch (&sv, -10, __ATOMIC_ACQUIRE) != -10)
+    abort ();
+
+  if (__atomic_min_fetch (&sv, -20, __ATOMIC_RELEASE) != -20)
+    abort ();
+
+  if (__atomic_min_fetch (&sv, SHRT_MIN, __ATOMIC_ACQ_REL) != SHRT_MIN)
+    abort ();
+
+  if (__atomic_min_fetch (&sv, SHRT_MAX, __ATOMIC_SEQ_CST) != SHRT_MIN)
+    abort ();
+
+  if (sv != SHRT_MIN)
+    abort ();
+}
+
+void
+test_umin_fetch ()
+{
+  unsigned short uv = 100;
+
+  if (__atomic_min_fetch (&uv, 50, __ATOMIC_RELAXED) != 50)
+    abort ();
+
+  if (__atomic_min_fetch (&uv, 50, __ATOMIC_CONSUME) != 50)
+    abort ();
+
+  if (__atomic_min_fetch (&uv, 75, __ATOMIC_ACQUIRE) != 50)
+    abort ();
+
+  if (__atomic_min_fetch (&uv, 10, __ATOMIC_RELEASE) != 10)
+    abort ();
+
+  if (__atomic_min_fetch (&uv, 0, __ATOMIC_ACQ_REL) != 0)
+    abort ();
+
+  if (__atomic_min_fetch (&uv, USHRT_MAX, __ATOMIC_SEQ_CST) != 0)
+    abort ();
+
+  if (uv != 0)
+    abort ();
+}
+
+void
+test_smax_fetch ()
+{
+  short sv = -10;
+
+  if (__atomic_max_fetch (&sv, -5, __ATOMIC_RELAXED) != -5)
+    abort ();
+
+  if (__atomic_max_fetch (&sv, -5, __ATOMIC_CONSUME) != -5)
+    abort ();
+
+  if (__atomic_max_fetch (&sv, -20, __ATOMIC_ACQUIRE) != -5)
+    abort ();
+
+  if (__atomic_max_fetch (&sv, 10, __ATOMIC_RELEASE) != 10)
+    abort ();
+
+  if (__atomic_max_fetch (&sv, 50, __ATOMIC_ACQ_REL) != 50)
+    abort ();
+
+  if (__atomic_max_fetch (&sv, SHRT_MAX, __ATOMIC_SEQ_CST) != SHRT_MAX)
+    abort ();
+
+  if (sv != SHRT_MAX)
+    abort ();
+}
+
+void
+test_umax_fetch ()
+{
+  unsigned short uv = 10;
+
+  if (__atomic_max_fetch (&uv, 50, __ATOMIC_RELAXED) != 50)
+    abort ();
+
+  if (__atomic_max_fetch (&uv, 50, __ATOMIC_CONSUME) != 50)
+    abort ();
+
+  if (__atomic_max_fetch (&uv, 30, __ATOMIC_ACQUIRE) != 50)
+    abort ();
+
+  if (__atomic_max_fetch (&uv, 100, __ATOMIC_RELEASE) != 100)
+    abort ();
+
+  if (__atomic_max_fetch (&uv, 200, __ATOMIC_ACQ_REL) != 200)
+    abort ();
+
+  if (__atomic_max_fetch (&uv, USHRT_MAX, __ATOMIC_SEQ_CST) != USHRT_MAX)
+    abort ();
+
+  if (uv != USHRT_MAX)
+    abort ();
+}
 
 /* Test the OP routines with a result which isn't used. Use both variations
    within each function.  */
@@ -528,6 +745,130 @@ test_or ()
     abort ();
 }
 
+void
+test_smin ()
+{
+  short sv = 10;
+
+  __atomic_min_fetch (&sv, 5, __ATOMIC_RELAXED);
+  if (sv != 5)
+    abort ();
+
+  __atomic_fetch_min (&sv, 5, __ATOMIC_CONSUME);
+  if (sv != 5)
+    abort ();
+
+  __atomic_min_fetch (&sv, -10, __ATOMIC_ACQUIRE);
+  if (sv != -10)
+    abort ();
+
+  __atomic_fetch_min (&sv, -20, __ATOMIC_RELEASE);
+  if (sv != -20)
+    abort ();
+
+  __atomic_min_fetch (&sv, SHRT_MIN, __ATOMIC_ACQ_REL);
+  if (sv != SHRT_MIN)
+    abort ();
+
+  __atomic_fetch_min (&sv, SHRT_MAX, __ATOMIC_SEQ_CST);
+
+  if (sv != SHRT_MIN)
+    abort ();
+}
+
+void
+test_umin ()
+{
+  unsigned short uv = 100;
+
+  __atomic_min_fetch (&uv, 50, __ATOMIC_RELAXED);
+  if (uv != 50)
+    abort ();
+
+  __atomic_fetch_min (&uv, 50, __ATOMIC_CONSUME);
+  if (uv != 50)
+    abort ();
+
+  __atomic_min_fetch (&uv, 75, __ATOMIC_ACQUIRE);
+  if (uv != 50)
+    abort ();
+
+  __atomic_fetch_min (&uv, 10, __ATOMIC_RELEASE);
+  if (uv != 10)
+    abort ();
+
+  __atomic_min_fetch (&uv, 0, __ATOMIC_ACQ_REL);
+  if (uv != 0)
+    abort ();
+
+  __atomic_fetch_min (&uv, USHRT_MAX, __ATOMIC_SEQ_CST);
+
+  if (uv != 0)
+    abort ();
+}
+
+void
+test_smax ()
+{
+  short sv = -10;
+
+  __atomic_max_fetch (&sv, -5, __ATOMIC_RELAXED);
+  if (sv != -5)
+    abort ();
+
+  __atomic_fetch_max (&sv, -5, __ATOMIC_CONSUME);
+  if (sv != -5)
+    abort ();
+
+  __atomic_max_fetch (&sv, -20, __ATOMIC_ACQUIRE);
+  if (sv != -5)
+    abort ();
+
+  __atomic_fetch_max (&sv, 10, __ATOMIC_RELEASE);
+  if (sv != 10)
+    abort ();
+
+  __atomic_max_fetch (&sv, 50, __ATOMIC_ACQ_REL);
+  if (sv != 50)
+    abort ();
+
+  __atomic_fetch_max (&sv, SHRT_MAX, __ATOMIC_SEQ_CST);
+
+  if (sv != SHRT_MAX)
+    abort ();
+}
+
+void
+test_umax ()
+{
+  unsigned short uv = 10;
+
+  __atomic_max_fetch (&uv, 50, __ATOMIC_RELAXED);
+  if (uv != 50)
+    abort ();
+
+  __atomic_fetch_max (&uv, 50, __ATOMIC_CONSUME);
+  if (uv != 50)
+    abort ();
+
+  __atomic_max_fetch (&uv, 30, __ATOMIC_ACQUIRE);
+  if (uv != 50)
+    abort ();
+
+  __atomic_fetch_max (&uv, 100, __ATOMIC_RELEASE);
+  if (uv != 100)
+    abort ();
+
+  __atomic_max_fetch (&uv, 200, __ATOMIC_ACQ_REL);
+  if (uv != 200)
+    abort ();
+
+  __atomic_fetch_max (&uv, USHRT_MAX, __ATOMIC_SEQ_CST);
+
+  if (uv != USHRT_MAX)
+    abort ();
+}
+
 int
 main ()
 {
@@ -537,6 +878,10 @@ main ()
   test_fetch_nand ();
   test_fetch_xor ();
   test_fetch_or ();
+  test_fetch_smin ();
+  test_fetch_umin ();
+  test_fetch_smax ();
+  test_fetch_umax ();
 
   test_add_fetch ();
   test_sub_fetch ();
@@ -544,6 +889,10 @@ main ()
   test_nand_fetch ();
   test_xor_fetch ();
   test_or_fetch ();
+  test_smin_fetch ();
+  test_umin_fetch ();
+  test_smax_fetch ();
+  test_umax_fetch ();
 
   test_add ();
   test_sub ();
@@ -551,6 +900,10 @@ main ()
   test_nand ();
   test_xor ();
   test_or ();
+  test_smin ();
+  test_umin ();
+  test_smax ();
+  test_umax ();
 
   return 0;
 }

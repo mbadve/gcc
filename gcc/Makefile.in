@@ -1555,6 +1555,7 @@ OBJS = \
 	incpath.o \
 	init-regs.o \
 	internal-fn.o \
+	ifn-atomic-minmax-lowering.o \
 	ipa-locality-cloning.o \
 	ipa-cp.o \
 	ipa-sra.o \
@@ -1770,6 +1771,7 @@ OBJS = \
 	tree-ssa-dom.o \
 	tree-ssa-dse.o \
 	tree-ssa-forwprop.o \
+	tree-cas-to-minmax.o \
 	tree-ssa-ifcombine.o \
 	tree-ssa-live.o \
 	tree-ssa-loop-ch.o \

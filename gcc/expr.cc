@@ -9747,7 +9747,6 @@ expand_expr_real_2 (const_sepops ops, rtx target, machine_mode tmode,
 		    enum expand_modifier modifier)
 {
   rtx op0, op1, op2, temp;
-  rtx_code_label *lab;
   tree type;
   int unsignedp;
   machine_mode mode;
@@ -10498,93 +10497,7 @@ expand_expr_real_2 (const_sepops ops, rtx target, machine_mode tmode,
       if (temp != 0)
 	return temp;
 
-      if (VECTOR_TYPE_P (type))
-	gcc_unreachable ();
-
-      /* At this point, a MEM target is no longer useful; we will get better
-	 code without it.  */
-
-      if (! REG_P (target))
-	target = gen_reg_rtx (mode);
-
-      /* If op1 was placed in target, swap op0 and op1.  */
-      if (target != op0 && target == op1)
-	std::swap (op0, op1);
-
-      /* We generate better code and avoid problems with op1 mentioning
-	 target by forcing op1 into a pseudo if it isn't a constant.  */
-      if (! CONSTANT_P (op1))
-	op1 = force_reg (mode, op1);
-
-      {
-	enum rtx_code comparison_code;
-	rtx cmpop1 = op1;
-
-	if (code == MAX_EXPR)
-	  comparison_code = unsignedp ? GEU : GE;
-	else
-	  comparison_code = unsignedp ? LEU : LE;
-
-	/* Canonicalize to comparisons against 0.  */
-	if (op1 == const1_rtx)
-	  {
-	    /* Converting (a >= 1 ? a : 1) into (a > 0 ? a : 1)
-	       or (a != 0 ? a : 1) for unsigned.
-	       For MIN we are safe converting (a <= 1 ? a : 1)
-	       into (a <= 0 ? a : 1)  */
-	    cmpop1 = const0_rtx;
-	    if (code == MAX_EXPR)
-	      comparison_code = unsignedp ? NE : GT;
-	  }
-	if (op1 == constm1_rtx && !unsignedp)
-	  {
-	    /* Converting (a >= -1 ? a : -1) into (a >= 0 ? a : -1)
-	       and (a <= -1 ? a : -1) into (a < 0 ? a : -1) */
-	    cmpop1 = const0_rtx;
-	    if (code == MIN_EXPR)
-	      comparison_code = LT;
-	  }
-
-	/* Use a conditional move if possible.  */
-	if (can_conditionally_move_p (mode))
-	  {
-	    rtx insn;
-
-	    start_sequence ();
-
-	    /* Try to emit the conditional move.  */
-	    insn = emit_conditional_move (target,
-					  { comparison_code,
-					    op0, cmpop1, mode },
-					  op0, op1, mode,
-					  unsignedp);
-
-	    /* If we could do the conditional move, emit the sequence,
-	       and return.  */
-	    if (insn)
-	      {
-		rtx_insn *seq = get_insns ();
-		end_sequence ();
-		emit_insn (seq);
-		return target;
-	      }
-
-	    /* Otherwise discard the sequence and fall back to code with
-	       branches.  */
-	    end_sequence ();
-	  }
-
-	if (target != op0)
-	  emit_move_insn (target, op0);
-
-	lab = gen_label_rtx ();
-	do_compare_rtx_and_jump (target, cmpop1, comparison_code,
-				 unsignedp, mode, NULL_RTX, NULL, lab,
-				 profile_probability::uninitialized ());
-      }
-      emit_move_insn (target, op1);
-      emit_label (lab);
-      return target;
+      gcc_unreachable ();
 
     case BIT_NOT_EXPR:
       op0 = expand_expr (treeop0, subtarget,

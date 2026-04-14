@@ -6762,6 +6762,85 @@ expand_builtin_atomic_compare_exchange (machine_mode mode, tree exp,
   return target;
 }
 
+/* Expand IFN_ATOMIC_FETCH_MINMAX internal function.  */
+
+void
+expand_ifn_atomic_fetch_minmax (gcall *call)
+{
+  tree ptr = gimple_call_arg (call, 0);
+  tree value = gimple_call_arg (call, 1);
+  tree memorder_tree = gimple_call_arg (call, 2);
+  tree is_min = gimple_call_arg (call, 3);
+  tree is_fetch_op = gimple_call_arg (call, 4);
+  tree is_signed = gimple_call_arg (call, 5);
+
+  bool is_min_bool = tree_to_shwi (is_min);
+  bool is_fetch_op_bool = tree_to_shwi (is_fetch_op);
+  bool is_signed_bool = tree_to_shwi (is_signed);
+
+  memmodel model = get_memmodel (memorder_tree);
+  tree lhs = gimple_call_lhs (call);
+
+  enum rtx_code code;
+  if (is_signed_bool)
+    code = is_min_bool ? SMIN : SMAX;
+  else
+    code = is_min_bool ? UMIN : UMAX;
+
+  machine_mode mode = TYPE_MODE (TREE_TYPE (TREE_TYPE (ptr)));
+
+  rtx mem = get_builtin_sync_mem (ptr, mode);
+
+  rtx val = expand_expr (value, NULL_RTX, TYPE_MODE (TREE_TYPE (value)),
+			 EXPAND_NORMAL);
+
+  rtx target;
+  if (lhs)
+    target = expand_expr (lhs, NULL_RTX, VOIDmode, EXPAND_WRITE);
+  else
+    target = gen_reg_rtx (mode);
+
+  /* For sub-word signed operations, we need to handle sign extension
+     carefully.  The issue is that atomic libcalls may not return properly
+     sign-extended values, but the LHS might be a promoted variable that
+     has been marked as a sign-extended register.  A forced sign extension
+     after the atomic call might get optimized away if the target has been
+     marked as sign-extended.  */
+  rtx temp_target = target;
+  if (GET_CODE (target) == SUBREG && SUBREG_PROMOTED_VAR_P (target)
+      && GET_MODE_SIZE (mode).to_constant () < UNITS_PER_WORD)
+    {
+      /* Use a temporary non-promoted register for the atomic operation
+	 to avoid incorrect flags for the target register.  */
+      temp_target = gen_reg_rtx (mode);
+    }
+
+  rtx result = expand_atomic_fetch_op (temp_target, mem, val, code, model,
+				       !is_fetch_op_bool);
+
+  if (!result)
+    gcc_unreachable ();
+
+  /* If we used a temporary target due to promotion, handle the conversion
+   * properly.  */
+  if (temp_target != target)
+    {
+      /* For signed types, explicitly sign-extend the result.  */
+      if (is_signed_bool)
+	{
+	  rtx extended = gen_reg_rtx (word_mode);
+	  emit_insn (
+	    gen_rtx_SET (extended, gen_rtx_SIGN_EXTEND (word_mode, result)));
+	  result = gen_lowpart (mode, extended);
+	}
+
+      /* Now store to the actual target.  */
+      convert_move (SUBREG_REG (target), result, !is_signed_bool);
+    }
+  else if (result != target)
+    emit_move_insn (target, result);
+}
+
 /* Helper function for expand_ifn_atomic_compare_exchange - expand
    internal ATOMIC_COMPARE_EXCHANGE call into __atomic_compare_exchange_N
    call.  The weak parameter must be dropped to match the expected parameter
@@ -6981,6 +7060,9 @@ expand_builtin_atomic_fetch_op (machine_mode mode, tree exp, rtx target,
 				     OPTAB_LIB_WIDEN);
 	  ret = expand_simple_unop (mode, NOT, ret, target, true);
 	}
+      else if (code == SMIN || code == SMAX)
+	ret = expand_simple_binop (mode, code, ret, val, target, false,
+				   OPTAB_LIB_WIDEN);
       else
 	ret = expand_simple_binop (mode, code, ret, val, target, true,
 				   OPTAB_LIB_WIDEN);
@@ -7753,7 +7835,6 @@ expand_speculation_safe_value (machine_mode mode, tree exp, rtx target,
       mode = TYPE_MODE (TREE_TYPE (arg0));
       gcc_assert (GET_MODE_CLASS (mode) == MODE_INT);
     }
-
   val = expand_expr (arg0, NULL_RTX, mode, EXPAND_NORMAL);
 
   /* An optional second argument can be used as a failsafe value on
