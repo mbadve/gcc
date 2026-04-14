@@ -147,6 +147,9 @@ case "${target}" in
 	config_path="${config_path} posix"
 	tmake_file="t-aix"
 	;;
+  riscv32*-*-elf*)
+	config_path="${config_path} riscv32"
+	;;
 
   *-*-linux* | *-*-gnu* | *-*-k*bsd*-gnu \
   | *-*-netbsd* | *-*-freebsd* | *-*-openbsd* | *-*-dragonfly* \
@@ -172,7 +175,6 @@ case "${target}" in
 	XCFLAGS="${configure_tgt_pre_target_cpu_XCFLAGS}"
 	config_path="rtems"
 	;;
-
   *-*-elf*)
 	# ??? No target OS.  We could be targeting bare-metal kernel-mode,
 	# or user-mode for some custom OS.  If the target supports TAS,
