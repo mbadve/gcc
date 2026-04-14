@@ -422,8 +422,6 @@ static const struct riscv_ext_version riscv_ext_version_table[] =
   {"xcvsimd", ISA_SPEC_CLASS_NONE, 1, 0},
   {"xcvbi", ISA_SPEC_CLASS_NONE, 1, 0},
 
-  {"xmipstrig", ISA_SPEC_CLASS_NONE, 1, 0},
-
   {"xtheadba", ISA_SPEC_CLASS_NONE, 1, 0},
   {"xtheadbb", ISA_SPEC_CLASS_NONE, 1, 0},
   {"xtheadbs", ISA_SPEC_CLASS_NONE, 1, 0},
@@ -440,10 +438,13 @@ static const struct riscv_ext_version riscv_ext_version_table[] =
 
   {"xventanacondops", ISA_SPEC_CLASS_NONE, 1, 0},
 
+  {"xmipscbom", ISA_SPEC_CLASS_NONE, 1, 0},
+  {"xmipscbop", ISA_SPEC_CLASS_NONE, 1, 0},
   {"xmipscmov", ISA_SPEC_CLASS_NONE, 1, 0},
   {"xmipsexectl", ISA_SPEC_CLASS_NONE, 1, 0},
-  {"xmipscbop", ISA_SPEC_CLASS_NONE, 1, 0},
   {"xmipslsp", ISA_SPEC_CLASS_NONE, 1, 0},
+  {"xmipsmginv", ISA_SPEC_CLASS_NONE, 1, 0},
+  {"xmipstrig", ISA_SPEC_CLASS_NONE, 1, 0},
 
   {"xsfvcp",   ISA_SPEC_CLASS_NONE, 1, 0},
   {"xsfcease", ISA_SPEC_CLASS_NONE, 1, 0},
