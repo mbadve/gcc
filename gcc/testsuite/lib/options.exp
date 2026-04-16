@@ -119,3 +119,52 @@ proc check_for_options { language gcc_options compiler_patterns \
     check_for_options_with_filter $language $gcc_options "" $compiler_patterns \
 	$compiler_non_patterns $expected_failure
 }
+
+# Run the LANGUAGE compiler with GCC_OPTIONS and inspect the compiler output
+# If the newline-separated patterns in COMPILER_PATTERNS are in the output return 1 else return 0
+
+proc check_for_options_present { language gcc_options compiler_patterns } {
+    set test "compiler driver $gcc_options option(s):"
+    set gcc_options "\{additional_flags=$gcc_options\}"
+	set procedure ""
+
+    switch "$language" {
+	"c" {
+	    set compiler cc1
+	    set suffix c
+		set procedure "gcc_target_compile"
+	}
+	"c++" {
+	    set compiler cc1plus
+	    set suffix cc
+		set procedure "g++_target_compile"
+	}
+	default { error "unknown language" }
+    }
+
+    set filebase test-[pid]
+    set srcfname $filebase.$suffix
+    set fd [open $srcfname w]
+    puts $fd "int main (void) { return 0; }"
+    close $fd
+    remote_download host $srcfname
+
+    set gcc_output [$procedure $srcfname $filebase.x executable $gcc_options]
+    remote_file build delete $srcfname $filebase.x $filebase.gcno
+
+    if {[regexp -- "compiler not installed on this system|cannot execute" $gcc_output]} {
+	unsupported "$test: $language compiler not available"
+	return
+    }
+
+    # Verify that COMPILER_PATTERNS appear in gcc output.
+    foreach pattern [split $compiler_patterns "\n"] {
+	if {$pattern != ""} {
+	    if {[regexp -line -- "$pattern" $gcc_output]} {
+		puts "$pattern did not appear in the compiler options" 
+		return 0
+	    }
+	}
+	return 1
+    }
+}

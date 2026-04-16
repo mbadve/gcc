@@ -26,6 +26,16 @@ if [check_effective_target_be] then {
   return
 }
 
+# Load lib for option procs
+load_lib options.exp
+
+# Return if the -mtune=mips-m8500 compiler option is present
+# since m8500 does not support the vector extension of RISC-V
+if [ check_for_options_present c "-Q --help=target" { -mtune=PROCESSOR[ \t]+mips-m8500 } ] then {
+	puts "-mtune=mips-m8500 compiler option active: skipping vector tests"
+  return
+} 
+
 # Load support procs.
 load_lib gcc-dg.exp
 
