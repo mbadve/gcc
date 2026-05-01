@@ -506,6 +506,7 @@ struct riscv_multi_lib_info_t {
   std::string path;
   std::string arch_str;
   std::string abi_str;
+  std::string endian_str;
   std::vector<std::string> conds;
   riscv_subset_list *subset_list;
 
@@ -520,6 +521,7 @@ static bool riscv_no_matched_multi_lib;
 /* Used for record value of -march and -mabi.  */
 static std::string riscv_current_arch_str;
 static std::string riscv_current_abi_str;
+static std::string riscv_current_endian_str;
 
 riscv_subset_t::riscv_subset_t ()
   : name (), major_version (0), minor_version (0), next (NULL),
@@ -2091,7 +2093,8 @@ riscv_multi_lib_check (int argc ATTRIBUTE_UNUSED,
       input_location,
       "Cannot find suitable multilib set for %<-march=%s%>/%<-mabi=%s%>",
       riscv_current_arch_str.c_str (),
-      riscv_current_abi_str.c_str ());
+      riscv_current_abi_str.c_str (),
+      riscv_current_endian_str.c_str ());
 
   return "";
 }
@@ -2142,11 +2145,13 @@ riscv_multi_lib_info_t::parse (
 {
   const char *default_arch_str = STRINGIZING (TARGET_RISCV_DEFAULT_ARCH);
   const char *default_abi_str = STRINGIZING (TARGET_RISCV_DEFAULT_ABI);
+  const char *default_endian_str = STRINGIZING (MULTILIB_ENDIAN_DEFAULT);
   multi_lib_info->conds = conds;
   if (path == ".")
     {
       multi_lib_info->arch_str = default_arch_str;
       multi_lib_info->abi_str = default_abi_str;
+      multi_lib_info->endian_str = default_endian_str;
     }
   else
     {
@@ -2156,11 +2161,14 @@ riscv_multi_lib_info_t::parse (
 	  multi_lib_info->arch_str = itr->c_str () + strlen ("march=");
 	else if (prefixed_with (*itr, "mabi="))
 	  multi_lib_info->abi_str = itr->c_str () + strlen ("mabi=");
+	else if (*itr == "mlittle-endian" || *itr == "mbig-endian")
+	  multi_lib_info->endian_str = itr->c_str();
 
 	/* Skip this multi-lib if this configuration is exactly same as
 	   default multi-lib settings.  */
       if (multi_lib_info->arch_str == default_arch_str
-	  && multi_lib_info->abi_str == default_abi_str)
+	  && multi_lib_info->abi_str == default_abi_str
+	  && multi_lib_info->endian_str == default_endian_str)
 	return false;
     }
 
@@ -2347,6 +2355,11 @@ riscv_compute_multilib (
   /* Find mabi.  */
   riscv_current_abi_str =
     find_last_appear_switch (switches, n_switches, "mabi=");
+  /* Find endian.  */
+  if (find_last_appear_switch (switches, n_switches, "mlittle-endian"))
+    riscv_current_endian_str = "mlittle-endian";
+  if (find_last_appear_switch (switches, n_switches, "mbig-endian"))
+    riscv_current_endian_str = "mbig-endian";
 
   /* Failed to find -march or -mabi, but it should not happened since we have
      set both in OPTION_DEFAULT_SPECS.  */
@@ -2412,6 +2425,8 @@ riscv_compute_multilib (
 	  /* Ignore `!march=` and `!mabi=`, we will handle march and mabi
 	     later. */
 	  if (option_cond.size ()
+	      && !prefixed_with (option_cond, "!mbig-endian")
+	      && !prefixed_with (option_cond, "!mlittle-endian")
 	      && !prefixed_with (option_cond, "!march=")
 	      && !prefixed_with (option_cond, "!mabi="))
 	    option_conds.push_back (option_cond);
@@ -2423,7 +2438,7 @@ riscv_compute_multilib (
 	  std::string (this_path, this_path_len),
 	  option_conds);
 
-      if (result)
+      if (result && riscv_current_endian_str == multilib_info.endian_str)
 	multilib_infos.push_back (multilib_info);
 
       p++;
