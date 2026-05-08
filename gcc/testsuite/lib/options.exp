@@ -168,3 +168,7 @@ proc check_for_options_present { language gcc_options compiler_patterns } {
 	return 1
     }
 }
+
+proc check_for_options_present_mtune { mtune } {
+    return [check_for_options_present c "-Q --target=help" { -mtune=PROCESSOR[ \t]+$mtune }]
+}

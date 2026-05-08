@@ -14396,3 +14396,11 @@ proc check_effective_target_speculation_barrier_defined { } {
 	    }
 	}]
 }
+
+# Load lib for option procs
+load_lib options.exp
+
+# Return true if the compiler is configured with a specific mtune
+proc check_effective_target_mtune_mips_m8500 { } {
+    return [check_for_options_present_mtune "mips-m8500"]
+}
