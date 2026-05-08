@@ -701,10 +701,10 @@ static const struct riscv_tune_param mips_daimyo_tune_info = {
 /* Costs to use when optimizing for MIPS m8500.  */
 static const struct riscv_tune_param mips_m8500_tune_info = {
   {COSTS_N_INSNS (4), COSTS_N_INSNS (8)},	/* fp_add */
-  {COSTS_N_INSNS (4), COSTS_N_INSNS (8)},	/* fp_mul */
-  {COSTS_N_INSNS (10), COSTS_N_INSNS (20)},	/* fp_div */
-  {COSTS_N_INSNS (5), COSTS_N_INSNS (5)},	/* int_mul */
-  {COSTS_N_INSNS (14), COSTS_N_INSNS (14)},	/* int_div */
+  {COSTS_N_INSNS (3), COSTS_N_INSNS (6)},	/* fp_mul */
+  {COSTS_N_INSNS (11), COSTS_N_INSNS (22)},	/* fp_div */
+  {COSTS_N_INSNS (4), COSTS_N_INSNS (8)},	/* int_mul */
+  {COSTS_N_INSNS (11), COSTS_N_INSNS (22)},	/* int_div */
   2,						/* issue_rate */
   8,						/* branch_cost */
   4,						/* memory_cost */
