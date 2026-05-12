@@ -682,7 +682,7 @@ static const struct riscv_tune_param mips_daimyo_tune_info = {
   {COSTS_N_INSNS (5), COSTS_N_INSNS (5)},      /* fp_mul */
   {COSTS_N_INSNS (32), COSTS_N_INSNS (32)},    /* fp_div */
   {COSTS_N_INSNS (5), COSTS_N_INSNS (5)},      /* int_mul */
-  {COSTS_N_INSNS (36), COSTS_N_INSNS (36)},    /* int_div */
+  {COSTS_N_INSNS (22), COSTS_N_INSNS (22)},    /* int_div */
   2,                                           /* issue_rate */
   6,                                           /* branch_cost */
   4,                                           /* memory_cost */
