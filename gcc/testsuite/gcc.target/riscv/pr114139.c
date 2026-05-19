@@ -1,4 +1,4 @@
-/* { dg-do compile { target { ! riscv_abi_e } } } */
+/* { dg-do compile { target { rv64 && { ! riscv_abi_e } } } } */
 /* { dg-options "-O2 -fpic -mexplicit-relocs -mcpu=sifive-p450" } */
 
 static void *p;
