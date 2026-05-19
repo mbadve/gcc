@@ -5,6 +5,7 @@
    { dg-require-effective-target fileio }
    { dg-prune-output "warning: warning: \[^\n\r\]* possibly used unsafely" }
    { dg-skip-if "requires io" { avr-*-* } }
+   { dg-skip-if "requires io" { *-*-elf } }
    { dg-skip-if "requires io" { freestanding } } */
 
 #include <stdarg.h>
