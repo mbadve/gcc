@@ -172,3 +172,7 @@ proc check_for_options_present { language gcc_options compiler_patterns } {
 proc check_for_options_present_mtune { mtune } {
     return [check_for_options_present c "-Q --target=help" { -mtune=PROCESSOR[ \t]+$mtune }]
 }
+
+proc check_for_options_present_march { march } {
+    return [check_for_options_present c "-Q --target=help" { -march=[ \t]+.*$march }]
+}

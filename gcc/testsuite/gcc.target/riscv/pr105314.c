@@ -1,6 +1,7 @@
 /* PR rtl-optimization/105314 */
 /* { dg-do compile } */
 /* { dg-skip-if "" { *-*-* } { "-march=*zicond*" "-O0" "-Og" "-Os" "-Oz" } } */
+/* { dg-skip-if "SKIP: zicond extension enabled" { "march_zicond" } }*/
 /* { dg-options "-fdump-rtl-ce1" } */
 
 long

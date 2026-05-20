@@ -14404,3 +14404,7 @@ load_lib options.exp
 proc check_effective_target_mtune_mips_m8500 { } {
     return [check_for_options_present_mtune "mips-m8500"]
 }
+
+proc check_effective_target_march_zicond { } {
+    return [check_for_options_present_march "zicond"]
+}
