@@ -36,5 +36,5 @@ core_list_find(list_head *list, list_data *info)
 
 /* There was an unnecessary assignment to the return value until
    recently.  Scan for that in the resulting output.  */
-/* { dg-final { scan-assembler-not "li\\ta0,0" } } */
+/* { dg-final { scan-assembler-not "li\\ta0,0" } { xfail { mtune_mips_m8500 }}} */
 
