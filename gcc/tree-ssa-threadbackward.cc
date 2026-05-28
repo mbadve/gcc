@@ -1019,7 +1019,6 @@ public:
   }
   bool gate (function *) override
   {
-    if (m_first && !flag_thread_jumps_first) return false;
     return flag_thread_jumps && flag_expensive_optimizations;
   }
   unsigned int execute (function *fun) override
@@ -1048,7 +1047,6 @@ public:
   }
   bool gate (function *) override
   {
-    if (m_first && !flag_thread_jumps_first) return false;
     return flag_thread_jumps && flag_expensive_optimizations;
   }
   unsigned int execute (function *fun) override
