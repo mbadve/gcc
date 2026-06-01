@@ -541,6 +541,10 @@ mload-store-bonding
 Target Var(TARGET_LOAD_STORE_BONDING) Init(1)
 Emit two loads or two stores to help hardware bonding.
 
+mlate-load-store-bonding
+Target Var(TARGET_LATE_LOAD_STORE_BONDING) Init(1)
+Emit two loads or stores together to help hardware bonding.
+
 TargetVariable
 int riscv_sifive_subext
 
@@ -593,6 +597,10 @@ Inline strncmp calls if possible.
 minline-strlen
 Target Var(riscv_inline_strlen) Init(1)
 Inline strlen calls if possible.
+
+-param=riscv-load-store-alias-check-limit=
+Target Joined UInteger Var(riscv_load_store_alias_check_limit) Init(8) IntegerRange(0, 65536) Param
+Limit on number of alias checks performed when attempting to form an load/store bonding.
 
 -param=riscv-strcmp-inline-limit=
 Target RejectNegative Joined UInteger Var(riscv_strcmp_inline_limit) Init(64)

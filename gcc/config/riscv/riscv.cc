@@ -9348,9 +9348,6 @@ riscv_expand_prologue (void)
       else
 	dump_stack_clash_frame_info (NO_PROBE_SMALL_FRAME, true);
     }
-
-  if (ENABLE_LD_ST_PAIRS && optimize)
-    riscv_load_store_bond_insns ();
 }
 
 static rtx
@@ -9769,9 +9766,6 @@ riscv_expand_epilogue (int style)
       else
 	emit_jump_insn (gen_simple_return_internal (ra));
     }
-
-  if (ENABLE_LD_ST_PAIRS && optimize)
-    riscv_load_store_bond_insns ();
 }
 
 /* Implement EPILOGUE_USES.  */
@@ -12360,9 +12354,24 @@ riscv_load_store_bonding_p (rtx *operands, machine_mode mode, bool load_p)
       && !reg_class_subset_p (rc2, rc1))
     return false;
 
-  /* Make sure offset1 is aligned to the mode size.  */
   mode_size = GET_MODE_SIZE (mode).to_constant();
+
+  offset1 = (offset1 < offset2) ? offset1 : offset2;
+
+  /* Make sure offset1 is aligned to the mode size.  */
   if ((offset1 & (mode_size - 1)) != 0)
+    return false;
+
+  /* We do not bond if base register is not SP in case of double align.
+   * We allow bonding for other base reg also when we specify
+   * -mno-double-align flag,  */
+  if (TARGET_DOUBLE_ALIGN && (REGNO (base1) != STACK_POINTER_REGNUM))
+    return false;
+
+  /* If the base reg is SP, offset1 should be aligned to 16-bytes for ld/sd
+   * and 8-byte for lw/sw to form a good bond.  */
+  if (REGNO (base1) == STACK_POINTER_REGNUM
+      && (offset1 & ((mode_size * 2) - 1)) != 0)
     return false;
 
   if (abs (offset1 - offset2) != mode_size)

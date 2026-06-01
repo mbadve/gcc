@@ -218,6 +218,18 @@ pair_fusion_bb_info::node_alloc (access_record *access)
   return new (addr) T (access);
 }
 
+static rtx
+mem_ref (rtx x)
+{
+  if (GET_CODE (x) == SIGN_EXTEND || GET_CODE (x) == ZERO_EXTEND)
+    x = XEXP (x, 0);
+
+  if (MEM_P (x))
+    return x;
+
+  return NULL_RTX;
+}
+
 // Given a mem MEM, if the address has side effects, return a MEM that accesses
 // the same address but without the side effects.  Otherwise, return
 // MEM unchanged.
@@ -1667,8 +1679,8 @@ pair_fusion_bb_info::fuse_pair (bool load_p,
 
       rtx base_pat = pats[base.from_insn];
       rtx change_pat = pats[changed_insn];
-      rtx base_mem = XEXP (base_pat, load_p);
-      rtx change_mem = XEXP (change_pat, load_p);
+      rtx base_mem = mem_ref (XEXP (base_pat, load_p));
+      rtx change_mem = mem_ref (XEXP (change_pat, load_p));
 
       const bool lower_base_p = (insns[base.from_insn] == i1);
       HOST_WIDE_INT adjust_amt = access_size;
@@ -1779,7 +1791,7 @@ pair_fusion_bb_info::fuse_pair (bool load_p,
   poly_int64 offsets[2];
   for (int i = 0; i < 2; i++)
     {
-      rtx mem = XEXP (pats[i], load_p);
+      rtx mem = mem_ref (XEXP (pats[i], load_p));
       gcc_checking_assert (MEM_P (mem));
       rtx base = strip_offset (XEXP (mem, 0), offsets + i);
       gcc_checking_assert (REG_P (base));
@@ -1834,6 +1846,15 @@ pair_fusion_bb_info::fuse_pair (bool load_p,
       if (dump_file)
 	fprintf (dump_file,
 		 "punting on pair (%d,%d), pair mem policy says no\n",
+		 i1->uid (), i2->uid ());
+      return false;
+    }
+
+  if (!m_pass->pair_reg_and_mem_ok_with_policy (pats[0], pats[1], load_p))
+    {
+      if (dump_file)
+	fprintf (dump_file,
+		 "punting on pair (%d,%d), pair reg and mem policy says no\n",
 		 i1->uid (), i2->uid ());
       return false;
     }
@@ -2514,7 +2535,7 @@ pair_fusion_bb_info::try_fuse_pair (bool load_p, unsigned access_size,
   for (int i = 0; i < 2; i++)
     {
       pats[i] = PATTERN (insns[i]->rtl ());
-      cand_mems[i] = XEXP (pats[i], load_p);
+      cand_mems[i] = mem_ref (XEXP (pats[i], load_p));
       reg_ops[i] = XEXP (pats[i], !load_p);
     }
 
@@ -3134,10 +3155,10 @@ void pair_fusion::process_block (bb_info *bb)
       if (GET_CODE (pat) != SET)
 	continue;
 
-      if (track_stores && MEM_P (XEXP (pat, 0)))
-	bb_state.track_access (insn, false, XEXP (pat, 0));
-      else if (track_loads && MEM_P (XEXP (pat, 1)))
-	bb_state.track_access (insn, true, XEXP (pat, 1));
+      if (track_stores && mem_ref (XEXP (pat, 0)) != NULL_RTX)
+	bb_state.track_access (insn, false, mem_ref(XEXP (pat, 0)));
+      else if (track_loads && mem_ref (XEXP (pat, 1)) != NULL_RTX)
+	bb_state.track_access (insn, true, mem_ref (XEXP (pat, 1)));
     }
 
   bb_state.transform ();
