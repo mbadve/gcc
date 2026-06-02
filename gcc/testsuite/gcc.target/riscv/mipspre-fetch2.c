@@ -1,5 +1,5 @@
 /* { dg-do compile } */
-/* { dg-options "-march=rv64gc -mtune=mips-i8500" { target { rv64 } } } */
+/* { dg-options "-march=rv64gc_zicbop -mtune=mips-i8500" { target { rv64 } } } */
 /* { dg-skip-if "" { riscv32-*-* } { } } */
 
 void test1(char *a)

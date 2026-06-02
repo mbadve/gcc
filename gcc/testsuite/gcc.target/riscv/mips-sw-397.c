@@ -1,6 +1,6 @@
 /* { dg-do compile } */
-/* { dg-options "-march=rv32imafd_zcmp" } */
-/* { dg-skip-if "" { *-*-* } { "-O0" "-O1" "-O2" "-O3" "-Og" "-Oz" } } */
+/* { dg-options "-march=rv32imafd_zcmp -std=c99" { target { rv32 } } } */
+/* { dg-skip-if "" { *-*-* } { "-O0" "-O1" "-O2" "-O3" "-Og" "-Oz" "-Os" } } */
 
 long long int test (int i0, int i1, int j0)
 {
