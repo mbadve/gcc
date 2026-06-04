@@ -2091,7 +2091,7 @@ riscv_multi_lib_check (int argc ATTRIBUTE_UNUSED,
   if (riscv_no_matched_multi_lib)
     fatal_error (
       input_location,
-      "Cannot find suitable multilib set for %<-march=%s%>/%<-mabi=%s%>",
+      "Cannot find suitable multilib set for %<-march=%s%>/%<-mabi=%s%>/%<-%s%>",
       riscv_current_arch_str.c_str (),
       riscv_current_abi_str.c_str (),
       riscv_current_endian_str.c_str ());
@@ -2145,7 +2145,7 @@ riscv_multi_lib_info_t::parse (
 {
   const char *default_arch_str = STRINGIZING (TARGET_RISCV_DEFAULT_ARCH);
   const char *default_abi_str = STRINGIZING (TARGET_RISCV_DEFAULT_ABI);
-  const char *default_endian_str = STRINGIZING (MULTILIB_ENDIAN_DEFAULT);
+  const char *default_endian_str = MULTILIB_ENDIAN_DEFAULT;
   multi_lib_info->conds = conds;
   if (path == ".")
     {
@@ -2358,8 +2358,10 @@ riscv_compute_multilib (
   /* Find endian.  */
   if (find_last_appear_switch (switches, n_switches, "mlittle-endian"))
     riscv_current_endian_str = "mlittle-endian";
-  if (find_last_appear_switch (switches, n_switches, "mbig-endian"))
+  else if (find_last_appear_switch (switches, n_switches, "mbig-endian"))
     riscv_current_endian_str = "mbig-endian";
+  else
+    riscv_current_endian_str = "mlittle-endian";
 
   /* Failed to find -march or -mabi, but it should not happened since we have
      set both in OPTION_DEFAULT_SPECS.  */
@@ -2446,12 +2448,19 @@ riscv_compute_multilib (
 
   switch (select_kind)
     {
+    case select_by_abi_arch_cmodel:
+      {
+	const char *result;
+	result = riscv_select_multilib (riscv_current_abi_str, subset_list,
+					switches, n_switches, multilib_infos);
+	if (result != NULL)
+	  return result;
+	riscv_no_matched_multi_lib = false;
+	/* Fall trhough.  */
+      }
     case select_by_abi:
       return riscv_select_multilib_by_abi (riscv_current_abi_str,
 					   multilib_infos);
-    case select_by_abi_arch_cmodel:
-      return riscv_select_multilib (riscv_current_abi_str, subset_list,
-				    switches, n_switches, multilib_infos);
     case select_by_builtin:
       gcc_unreachable ();
     default:
