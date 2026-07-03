@@ -445,6 +445,7 @@ static const struct riscv_ext_version riscv_ext_version_table[] =
   {"xmipslsp", ISA_SPEC_CLASS_NONE, 1, 0},
   {"xmipsmginv", ISA_SPEC_CLASS_NONE, 1, 0},
   {"xmipstrig", ISA_SPEC_CLASS_NONE, 1, 0},
+  {"xmipsuarchdis", ISA_SPEC_CLASS_NONE, 1, 0},
   {"xmipsfeatdis", ISA_SPEC_CLASS_NONE, 1, 0},
   {"xmipsdebugbase", ISA_SPEC_CLASS_NONE, 1, 0},
   {"xmipswfe", ISA_SPEC_CLASS_NONE, 1, 0},
