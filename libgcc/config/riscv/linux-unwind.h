@@ -22,6 +22,9 @@
 /* Unwind shadow stack.  */
 #if defined(__riscv_zicfiss)
 # include "config/riscv/shadow-stack-unwind.h"
+/* Unwind shadow call stack.  */
+#elif defined(__SANITIZE_SHADOW_CALL_STACK__)
+# include "config/riscv/shadow-call-stack-unwind.h"
 #endif
 
 #ifndef inhibit_libc

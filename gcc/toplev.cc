@@ -1740,7 +1740,7 @@ process_options ()
       if (!targetm.have_shadow_call_stack)
 	sorry ("%<-fsanitize=shadow-call-stack%> not supported "
 	       "in current platform");
-      else if (flag_exceptions)
+      else if (flag_exceptions && !targetm.have_shadow_call_stack_with_exceptions)
 	error_at (UNKNOWN_LOCATION, "%<-fsanitize=shadow-call-stack%> "
 		  "requires %<-fno-exceptions%>");
     }

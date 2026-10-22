@@ -7720,6 +7720,15 @@ DEFHOOKPOD
 @option{-fsanitize=shadow-call-stack}.  The default value is false.",
  bool, false)
 
+/* This value represents whether the exceptions are supported for shadow 
+   call stack on the target platform.  */
+DEFHOOKPOD
+(have_shadow_call_stack_with_exceptions,
+ "This value is true if the target platform supports\n\
+exception handling for @option{-fsanitize=shadow-call-stack}.\n\
+The default value is false.",
+ bool, false)
+
 /* This value represents whether libatomic is available on
    the target platform.  */
 DEFHOOKPOD

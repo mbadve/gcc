@@ -10510,11 +10510,7 @@ riscv_emit_scs_push (void)
 {
   rtx gp = gen_rtx_REG (Pmode, GP_REGNUM);
 
-  rtx_insn *insn
-    = emit_insn (gen_add3_insn (gp, gp, GEN_INT (UNITS_PER_WORD)));
-  add_reg_note (insn, REG_CFA_VAL_EXPRESSION,
-		gen_rtx_SET (gp, plus_constant (Pmode, gp, -UNITS_PER_WORD)));
-  RTX_FRAME_RELATED_P (insn) = 1;
+  emit_insn (gen_add3_insn (gp, gp, GEN_INT (UNITS_PER_WORD)));
 
   emit_move_insn (gen_rtx_MEM (Pmode,
 			       plus_constant (Pmode, gp, -UNITS_PER_WORD)),
@@ -10532,10 +10528,7 @@ riscv_emit_scs_pop (rtx reg)
 		  gen_rtx_MEM (Pmode,
 			       plus_constant (Pmode, gp, -UNITS_PER_WORD)));
 
-  rtx_insn *insn
-    = emit_insn (gen_add3_insn (gp, gp, GEN_INT (-UNITS_PER_WORD)));
-  add_reg_note (insn, REG_CFA_RESTORE, gp);
-  RTX_FRAME_RELATED_P (insn) = 1;
+  emit_insn (gen_add3_insn (gp, gp, GEN_INT (-UNITS_PER_WORD)));
 }
 
 /* Expand the "prologue" pattern.  */
@@ -17118,6 +17111,9 @@ riscv_memtag_tag_bitsize ()
 
 #undef TARGET_HAVE_SHADOW_CALL_STACK
 #define TARGET_HAVE_SHADOW_CALL_STACK true
+
+#undef TARGET_HAVE_SHADOW_CALL_STACK_WITH_EXCEPTIONS
+#define TARGET_HAVE_SHADOW_CALL_STACK_WITH_EXCEPTIONS true
 
 /* The generic ELF target does not always have TLS support.  */
 #ifdef HAVE_AS_TLS

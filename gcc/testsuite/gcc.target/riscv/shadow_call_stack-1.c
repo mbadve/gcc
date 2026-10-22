@@ -63,6 +63,3 @@ int __attribute__((no_sanitize("shadow-call-stack"))) f4 (int a)
 **f5:
 */
 void __attribute__((naked)) f5 (void) {}
-
-/* { dg-final { scan-assembler-times {\.cfi_escape 0x16,0x3,0x2,0x73,0x7[c8]} 2 } } */
-/* { dg-final { scan-assembler-times {\.cfi_restore 3} 2 } } */
