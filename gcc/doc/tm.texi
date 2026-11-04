@@ -13116,6 +13116,12 @@ This value is true if the target platform supports
 @option{-fsanitize=shadow-call-stack}.  The default value is false.
 @end deftypevr
 
+@deftypevr {Target Hook} bool TARGET_HAVE_SHADOW_CALL_STACK_WITH_EXCEPTIONS
+This value is true if the target platform supports
+exception handling for @option{-fsanitize=shadow-call-stack}.
+The default value is false.
+@end deftypevr
+
 @deftypevr {Target Hook} bool TARGET_HAVE_LIBATOMIC
 This value is true if the target platform supports
 libatomic.  The default value is false.
