@@ -1190,7 +1190,8 @@ sparc_do_work_around_errata (void)
 	  && jump_to_label_p (jump)
 	  && get_attr_branch_type (jump) == BRANCH_TYPE_ICC)
 	{
-	  rtx_insn *target = next_active_insn (JUMP_LABEL_AS_INSN (jump));
+	  rtx_insn *target
+	    = next_active_non_empty_insn (JUMP_LABEL_AS_INSN (jump));
 	  if (target
 	      && (fpop_insn_p (target)
 		  || (JUMP_P (target)
@@ -1207,7 +1208,8 @@ sparc_do_work_around_errata (void)
 	{
 	  if (jump && jump_to_label_p (jump))
 	    {
-	      rtx_insn *target = next_active_insn (JUMP_LABEL_AS_INSN (jump));
+	      rtx_insn *target
+		= next_active_non_empty_insn (JUMP_LABEL_AS_INSN (jump));
 	      if (target && atomic_insn_for_leon3_p (target))
 		emit_insn_before (gen_nop (), target);
 	    }
@@ -6481,7 +6483,7 @@ output_return (rtx_insn *insn)
 	      PATTERN (delay) = gen_blockage ();
 	      INSN_CODE (delay) = -1;
 	      final_scan_insn (delay, asm_out_file, optimize, 0, NULL);
-	      INSN_LOCATION (delay) = UNKNOWN_LOCATION;
+	      delay->set_location (UNKNOWN_LOCATION);
 
 	      output_restore (pat);
 	    }
@@ -6552,7 +6554,7 @@ output_sibcall (rtx_insn *insn, rtx call_operand)
 	  PATTERN (delay) = gen_blockage ();
 	  INSN_CODE (delay) = -1;
 	  final_scan_insn (delay, asm_out_file, optimize, 0, NULL);
-	  INSN_LOCATION (delay) = UNKNOWN_LOCATION;
+	  delay->set_location (UNKNOWN_LOCATION);
 
 	  output_restore (pat);
 	}

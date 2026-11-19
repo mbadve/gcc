@@ -82,6 +82,7 @@ along with GCC; see the file COPYING3.  If not see
 #include "cgraph.h"
 #include "langhooks.h"
 #include "gimplify.h"
+#include "asan.h"
 
 /* This file should be included last.  */
 #include "target-def.h"
@@ -800,7 +801,16 @@ static const struct riscv_tune_param xt_c9501_tune_info = {
   false,					/* overlap_op_by_pieces */
   true,						/* use_zero_stride_load */
   false,					/* speculative_sched_vsetvl */
-  RISCV_FUSE_NOTHING,				/* fusible_ops */
+  RISCV_FUSE_LUI_ADDI | RISCV_FUSE_AUIPC_ADDI
+  | RISCV_FUSE_SUB_SEQZ
+  | RISCV_FUSE_ADD_ANDI
+  | RISCV_FUSE_LDINDEXED | RISCV_FUSE_ADD_ST
+  | RISCV_FUSE_ANDI_ADD | RISCV_FUSE_LOGIC_LOGIC
+  | RISCV_FUSE_SLLI_SRLI | RISCV_FUSE_SRLI_ADD
+  | RISCV_FUSE_LDPREINCREMENT | RISCV_FUSE_PREINDEX_ST
+  | RISCV_FUSE_POSTINDEX_LD | RISCV_FUSE_POSTINDEX_ST
+  | RISCV_FUSE_LDST_PAIR_INC
+  | RISCV_FUSE_LDST_PAIR_DEC,			/* fusible_ops */
   &xt_c9501_vector_cost,			/* vector cost */
   "32",						/* function_align */
   "8",						/* jump_align */
@@ -8010,7 +8020,7 @@ riscv_vector_element_bitsize (const_tree type)
 
   if (strstr (name, "bool") != NULL)
     return 1;
-  else if (strstr (name, "int8") != NULL)
+  else if (strstr (name, "int8") != NULL || strstr (name, "float8") != NULL)
     return 8;
   else if (strstr (name, "int16") != NULL || strstr (name, "float16") != NULL)
     return 16;
@@ -10086,7 +10096,8 @@ riscv_for_each_saved_reg (poly_int64 sp_offset, riscv_save_restore_fn fn,
 	    }
 	}
 
-      if (need_shadow_stack_push_pop_p () && epilogue && !sibcall_p
+      if ((need_zicfiss_push_pop_p () || need_scs_push_pop_p ())
+	  && epilogue && !sibcall_p
 	  && !(maybe_eh_return && crtl->calls_eh_return)
 	  && (regno == RETURN_ADDR_REGNUM)
 	  && !cfun->machine->interrupt_handler_p)
@@ -10688,6 +10699,41 @@ riscv_allocate_and_probe_stack_space (rtx temp1, HOST_WIDE_INT size)
     }
 }
 
+/* Push the return address onto the shadow call stack.  */
+
+static void
+riscv_emit_scs_push (void)
+{
+  rtx gp = gen_rtx_REG (Pmode, GP_REGNUM);
+
+  rtx_insn *insn
+    = emit_insn (gen_add3_insn (gp, gp, GEN_INT (UNITS_PER_WORD)));
+  add_reg_note (insn, REG_CFA_VAL_EXPRESSION,
+		gen_rtx_SET (gp, plus_constant (Pmode, gp, -UNITS_PER_WORD)));
+  RTX_FRAME_RELATED_P (insn) = 1;
+
+  emit_move_insn (gen_rtx_MEM (Pmode,
+			       plus_constant (Pmode, gp, -UNITS_PER_WORD)),
+		  gen_rtx_REG (Pmode, RETURN_ADDR_REGNUM));
+}
+
+/* Pop the return address from the shadow call stack into REG.  */
+
+static void
+riscv_emit_scs_pop (rtx reg)
+{
+  rtx gp = gen_rtx_REG (Pmode, GP_REGNUM);
+
+  emit_move_insn (reg,
+		  gen_rtx_MEM (Pmode,
+			       plus_constant (Pmode, gp, -UNITS_PER_WORD)));
+
+  rtx_insn *insn
+    = emit_insn (gen_add3_insn (gp, gp, GEN_INT (-UNITS_PER_WORD)));
+  add_reg_note (insn, REG_CFA_RESTORE, gp);
+  RTX_FRAME_RELATED_P (insn) = 1;
+}
+
 /* Expand the "prologue" pattern.  */
 
 void
@@ -10708,8 +10754,10 @@ riscv_expand_prologue (void)
   if (cfun->machine->naked_p)
     return;
 
-  if (need_shadow_stack_push_pop_p ())
+  if (need_zicfiss_push_pop_p ())
     emit_insn (gen_sspush (Pmode, gen_rtx_REG (Pmode, RETURN_ADDR_REGNUM)));
+  else if (need_scs_push_pop_p ())
+    riscv_emit_scs_push ();
 
   /* Prefer multi-push to save-restore libcall.  */
   if (riscv_use_multi_push (frame))
@@ -10955,9 +11003,12 @@ riscv_expand_epilogue (int style)
   bool use_multi_pop = ((style == NORMAL_RETURN) || (style == SIBCALL_RETURN))
 		       && riscv_use_multi_push (frame);
 
+  /* Don't emit riscv_restore_N calls in case of shadow stack.  */
   bool use_restore_libcall
     = !use_multi_pop
-      && ((style == NORMAL_RETURN) && riscv_use_save_libcall (frame));
+      && ((style == NORMAL_RETURN) && riscv_use_save_libcall (frame))
+      && !(need_zicfiss_push_pop_p () || need_scs_push_pop_p ());
+
   unsigned libcall_size = use_restore_libcall && !use_multi_pop
 			    ? frame->save_libcall_adjustment
 			    : 0;
@@ -11227,7 +11278,8 @@ riscv_expand_epilogue (int style)
       frame->mask = mask;
       frame->fmask = fmask;
       bool use_popret = style == NORMAL_RETURN
-			&& !need_shadow_stack_push_pop_p ();
+			&& !(need_zicfiss_push_pop_p ()
+			     || need_scs_push_pop_p ());
       riscv_gen_multi_pop_insn (use_popret, frame->mask, multipop_size);
       if (use_popret)
 	return;
@@ -11248,16 +11300,22 @@ riscv_expand_epilogue (int style)
     emit_insn (gen_add3_insn (stack_pointer_rtx, stack_pointer_rtx,
 			      EH_RETURN_STACKADJ_RTX));
 
-  if (need_shadow_stack_push_pop_p ()
-      && !((style == EXCEPTION_RETURN) && crtl->calls_eh_return))
-    {
-      if (BITSET_P (cfun->machine->frame.mask, RETURN_ADDR_REGNUM)
+  /* Must match the t0 redirect condition in riscv_for_each_saved_reg.  */
+  bool stack_return_address_in_t0
+	= BITSET_P (cfun->machine->frame.mask, RETURN_ADDR_REGNUM)
 	  && style != SIBCALL_RETURN
 	  && !cfun->machine->interrupt_handler_p
-	  && !use_multi_pop)
-	emit_insn (gen_sspopchk (Pmode, t0));
-      else
-	emit_insn (gen_sspopchk (Pmode, ra));
+	  && !use_multi_pop;
+
+  /* Handle the shadow stack epilogue expand.  */
+  if (!((style == EXCEPTION_RETURN) && crtl->calls_eh_return))
+    {
+      rtx addr_reg = stack_return_address_in_t0 ? t0 : ra;
+
+      if (need_zicfiss_push_pop_p ())
+	emit_insn (gen_sspopchk (Pmode, addr_reg));
+      else if (need_scs_push_pop_p ())
+	riscv_emit_scs_pop (addr_reg);
     }
 
   /* Return from interrupt.  */
@@ -11278,11 +11336,9 @@ riscv_expand_epilogue (int style)
     }
   else if (style != SIBCALL_RETURN)
     {
-      if (need_shadow_stack_push_pop_p ()
+      if ((need_zicfiss_push_pop_p () || need_scs_push_pop_p ())
 	  && !((style == EXCEPTION_RETURN) && crtl->calls_eh_return)
-	  && BITSET_P (cfun->machine->frame.mask, RETURN_ADDR_REGNUM)
-	  && !cfun->machine->interrupt_handler_p
-	  && !use_multi_pop)
+	  && stack_return_address_in_t0)
 	emit_jump_insn (gen_simple_return_internal (t0));
       else
 	emit_jump_insn (gen_simple_return_internal (ra));
@@ -11295,6 +11351,10 @@ bool
 riscv_epilogue_uses (unsigned int regno)
 {
   if (regno == RETURN_ADDR_REGNUM)
+    return true;
+
+  if (regno == GP_REGNUM && epilogue_completed && 
+      sanitize_flags_p (SANITIZE_SHADOW_CALL_STACK))
     return true;
 
   if (epilogue_completed && cfun->machine->interrupt_handler_p)
@@ -11484,7 +11544,8 @@ riscv_can_use_return_insn (void)
 {
   return (reload_completed && known_eq (cfun->machine->frame.total_size, 0)
 	  && ! cfun->machine->interrupt_handler_p
-	  && ! need_shadow_stack_push_pop_p ());
+	  && ! need_zicfiss_push_pop_p ()
+	  && ! need_scs_push_pop_p ());
 }
 
 /* Given that there exists at least one variable that is set (produced)
@@ -12977,6 +13038,9 @@ riscv_conditional_register_usage (void)
       fixed_regs[VXRM_REGNUM] = call_used_regs[VXRM_REGNUM] = 1;
       fixed_regs[FRM_REGNUM] = call_used_regs[FRM_REGNUM] = 1;
     }
+
+  if (sanitize_flags_p (SANITIZE_SHADOW_CALL_STACK))
+    call_used_regs[GP_REGNUM] = 0;
 }
 
 /* Return a register priority for hard reg REGNO.  */
@@ -16253,9 +16317,17 @@ bool is_zicfilp_p ()
   return false;
 }
 
-bool need_shadow_stack_push_pop_p ()
+bool
+need_zicfiss_push_pop_p ()
 {
   return is_zicfiss_p () && riscv_save_return_addr_reg_p ();
+}
+
+bool
+need_scs_push_pop_p ()
+{
+  return sanitize_flags_p (SANITIZE_SHADOW_CALL_STACK)
+	 && riscv_save_return_addr_reg_p ();
 }
 
 /* Synthesize OPERANDS[0] = OPERANDS[1] CODE OPERANDS[2].
@@ -17331,6 +17403,9 @@ riscv_memtag_tag_bitsize ()
 #undef TARGET_SHRINK_WRAP_SET_HANDLED_COMPONENTS
 #define TARGET_SHRINK_WRAP_SET_HANDLED_COMPONENTS \
   riscv_set_handled_components
+
+#undef TARGET_HAVE_SHADOW_CALL_STACK
+#define TARGET_HAVE_SHADOW_CALL_STACK true
 
 /* The generic ELF target does not always have TLS support.  */
 #ifdef HAVE_AS_TLS
